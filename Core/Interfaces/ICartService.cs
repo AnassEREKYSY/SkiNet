@@ -9,5 +9,4 @@ public interface ICartService
     Task<ShoppingCart?> SetCartAsync(ShoppingCart cart);
     Task<bool> DeleteCartAsync(string key);
 
-a
 } 
