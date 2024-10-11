@@ -1,4 +1,25 @@
 
-<div class="mt-5">
-    <h1 class="text-2xl">Only authorized users and those with something the the cart should be able to see this!</h1>
+<div class="flex mt-3 gap-6">
+    <div class="w-3/4">
+        <mat-stepper #stepper class="bg-white border border-gray-200 shadow-sm">
+            <mat-step label="Address">
+                <div id="address-element"></div>
+                <div class="flex justify-between mt-6">
+                    <button routerLink="/shop" mat-stroked-button>Continue shopping</button>
+                    <button matStepperNext mat-flat-button>Next</button>
+                </div>
+            </mat-step>
+            <mat-step label="Shipping">
+                Delivery form
+            </mat-step>            
+            <mat-step label="Confirmation">
+                Review form
+            </mat-step>
+
+        </mat-stepper>
+    </div>
+    <div class="h-1/4">
+        <app-order-summary></app-order-summary>
+    </div>
+    
 </div>
