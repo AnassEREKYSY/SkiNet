@@ -1,5 +1,6 @@
 using System;
 using Core.Entities;
+using Core.Entities.OrderAggregate;
 using Infrastructure.Config;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,9 @@ public class StoreContext(DbContextOptions options) : IdentityDbContext<AppUser>
     public DbSet<Adresse> Adresses { get; set; }
     
     public DbSet<DeliveryMethod> DeliveryMethods { get; set; }
+    public DbSet<Order> Orders { get; set; }
+    public DbSet<OrderItem> OrderItems { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
