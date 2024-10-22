@@ -12,7 +12,7 @@ namespace API.Controllers;
 public class BaseApiController : ControllerBase
 {
 
-    protected async Task<ActionResult> CreatePageResult<T>(IGenericRepository<T> repo , 
+    protected async Task<ActionResult> CreatePagedResult<T>(IGenericRepository<T> repo , 
                 ISpecification<T> spec, int pageIndex , int pageSize)
                 where T : BaseEntity
     {
