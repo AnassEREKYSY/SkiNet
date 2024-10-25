@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <None Include="Data\SeedData\**" CopyToOutputDirectory="PreserveNewest"/>
     <ProjectReference Include="..\Core\Core.csproj" />
   </ItemGroup>
 
@@ -11,9 +12,6 @@
     <PackageReference Include="Stripe.net" Version="46.2.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Data\SeedData\" />
-  </ItemGroup>
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>

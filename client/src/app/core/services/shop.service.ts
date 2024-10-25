@@ -4,12 +4,13 @@ import { Pagination } from '../../shared/models/pagination';
 import { Product } from '../../shared/models/product';
 import { Observable } from 'rxjs';
 import { ShopParams } from '../../shared/models/shopParams';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShopService {
-  baseUrl="https://localhost:5001/api/";
+  baseUrl=environment.apiUrl;
   private http = inject(HttpClient);
 
   products: Product[]=[];
