@@ -5,5 +5,5 @@ public enum OrderStatus
     Pending,
     PaymentReceived,
     PaymentFailed,
-    PaymentMisMatch
+    PaymentMismatch
 }

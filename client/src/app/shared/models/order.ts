@@ -11,6 +11,7 @@ export interface Order {
     paymentIntentId: string
     shippingPrice: number
     total: number
+    discount?: number
   }
   
   export interface ShippingAddress {
@@ -42,7 +43,8 @@ export interface Order {
     cartId: string
     deliveryMethodId: number
     shippingAddress: ShippingAddress
-    paymentSummery: PaymentSummary
+    paymentSummary: PaymentSummary
+    discount?: number;
 
   }
   

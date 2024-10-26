@@ -17,4 +17,6 @@ public class OrderDto
     public required string PaymentIntentId { get; set; }
     public decimal ShippingPrice { get; set; }
     public decimal Total { get; set; }
+    public decimal Discount { get; set; }
+
 }
