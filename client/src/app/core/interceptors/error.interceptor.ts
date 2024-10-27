@@ -26,6 +26,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       if(err.status === 401){
         snackbar.error(err.error.title || err.error)
       }
+      if(err.status === 403){
+        snackbar.error('Forbiden')
+      }
       if(err.status === 404){
         router.navigateByUrl('/not-found')
       }
