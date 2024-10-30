@@ -15,11 +15,11 @@ export class AdminService {
   getOrders(orderParams:OrderParams){
     let params = new HttpParams();
     if(orderParams.filter && orderParams.filter !== 'All'){
-      params= params.append('filter',orderParams.filter);
+      params= params.append('status',orderParams.filter);
     }
     params= params.append('pageIndex',orderParams.pageNumber);
     params= params.append('pageSize',orderParams.pageSize);
-    return this.http.get<Pagination<Order[]>>(this.baseUrl+'admin/orders',{params})
+    return this.http.get<Pagination<Order>>(this.baseUrl+'admin/orders',{params})
   }
 
   getOrder(id:number){
