@@ -63,7 +63,10 @@ export class ShopComponent {
 
   getProducts() {
     this.shopService.getProducts(this.shopParams).subscribe({
-      next: response => this.products = response,
+      next: response => {
+        this.products = response;
+        console.log("Products ",this.products)
+      },
       error: error => console.error(error)
     })
   }
