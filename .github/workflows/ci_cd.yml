@@ -61,17 +61,16 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           envs: API_IMAGE,CLIENT_IMAGE
           script: |
+            docker network inspect skinet-net >/dev/null 2>&1 || docker network create skinet-net
             docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GHCR_TOKEN }}
             docker pull $API_IMAGE
             docker pull $CLIENT_IMAGE
-            docker stop skinet-api || true
-            docker rm skinet-api || true
-            docker stop skinet-client || true
-            docker rm skinet-client || true
-            docker run -d --name skinet-api -p 5001:80 --restart unless-stopped \
+            docker stop skinet-api skinet-client || true
+            docker rm skinet-api skinet-client || true
+            docker run -d --name skinet-api --network skinet-net -p 5001:80 --restart unless-stopped \
               -e ASPNETCORE_ENVIRONMENT=Production \
               -e ConnectionStrings__DefaultConnection="Server=sql,1433;Database=SkiNet;User Id=sa;Password=Password@1;TrustServerCertificate=True" \
               -e ConnectionStrings__Redis="redis:6379" \
               $API_IMAGE
-            docker run -d --name skinet-client -p 4200:80 --restart unless-stopped \
+            docker run -d --name skinet-client --network skinet-net -p 4200:80 --restart unless-stopped \
               $CLIENT_IMAGE
