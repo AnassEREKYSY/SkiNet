@@ -39,15 +39,15 @@ jobs:
           file: API/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/skinet-api:latest
+            ghcr.io/anasserekysy/skinet-api:latest
             ${{ env.API_IMAGE }}
       - uses: docker/build-push-action@v4
         with:
-          context: ./client
-          file: Dockerfile
+          context: .
+          file: client/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/skinet-client:latest
+            ghcr.io/anasserekysy/skinet-client:latest
             ${{ env.CLIENT_IMAGE }}
 
   deploy:
