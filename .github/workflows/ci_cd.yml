@@ -80,6 +80,7 @@ jobs:
               -p 5001:80 \
               --restart unless-stopped \
               -e ASPNETCORE_ENVIRONMENT=Production \
+              -e ASPNETCORE_URLS=http://+:80 \
               -e ConnectionStrings__DefaultConnection="Server=sql,1433;Database=SkiNet;User Id=sa;Password=Password@1;TrustServerCertificate=True" \
               -e ConnectionStrings__Redis="redis:6379" \
               $API_IMAGE
