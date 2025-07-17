@@ -5,8 +5,8 @@ on:
     branches: [ main ]
 
 env:
-  API_IMAGE: ghcr.io/${{ github.repository_owner }}/skinet-api:${{ github.sha }}
-  CLIENT_IMAGE: ghcr.io/${{ github.repository_owner }}/skinet-client:${{ github.sha }}
+  API_IMAGE: ghcr.io/anasserekysy/skinet-api:${{ github.sha }}
+  CLIENT_IMAGE: ghcr.io/anasserekysy/skinet-client:${{ github.sha }}
 
 jobs:
   build-client:
