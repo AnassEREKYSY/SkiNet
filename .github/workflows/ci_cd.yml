@@ -5,8 +5,8 @@ on:
     branches: [ main ]
 
 env:
-  API_IMAGE: ghcr.io/${{ github.repository_owner }}/skinet-api:${{ github.sha }}
-  CLIENT_IMAGE: ghcr.io/${{ github.repository_owner }}/skinet-client:${{ github.sha }}
+  API_IMAGE: ghcr.io/anasserekysy/skinet-api:${{ github.sha }}
+  CLIENT_IMAGE: ghcr.io/anasserekysy/skinet-client:${{ github.sha }}
 
 jobs:
   build-client:
@@ -39,7 +39,7 @@ jobs:
           file: API/Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/skinet-api:latest
+            ghcr.io/anasserekysy/skinet-api:latest
             ${{ env.API_IMAGE }}
       - uses: docker/build-push-action@v4
         with:
@@ -47,7 +47,7 @@ jobs:
           file: Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/skinet-client:latest
+            ghcr.io/anasserekysy/skinet-client:latest
             ${{ env.CLIENT_IMAGE }}
 
   deploy:
