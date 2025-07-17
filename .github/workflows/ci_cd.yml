@@ -67,22 +67,10 @@ jobs:
           envs: API_IMAGE,CLIENT_IMAGE
           script: |
             docker network inspect skinet-net >/dev/null 2>&1 || docker network create skinet-net
-            docker rm -f sql redis skinet-api skinet-client || true
-            docker run -d \
-              --name sql \
-              --network skinet-net \
-              -e ACCEPT_EULA=1 \
-              -e SA_PASSWORD=Password@1 \
-              -p 1433:1433 \
-              mcr.microsoft.com/azure-sql-edge
-            docker run -d \
-              --name redis \
-              --network skinet-net \
-              -p 6379:6379 \
-              redis:latest
             docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GHCR_TOKEN }}
             docker pull $API_IMAGE
             docker pull $CLIENT_IMAGE
+            docker rm -f skinet-api skinet-client || true
             docker run -d \
               --name skinet-api \
               --network skinet-net \
@@ -93,10 +81,11 @@ jobs:
               -e ASPNETCORE_URLS=http://+:80 \
               -e ConnectionStrings__DefaultConnection="Server=sql,1433;Database=SkiNet;User Id=sa;Password=Password@1;TrustServerCertificate=True" \
               -e ConnectionStrings__Redis="redis:6379" \
-              $API_IMAGE
+              $API_IMAGE  
             docker run -d \
               --name skinet-client \
               --network skinet-net \
               -p 4200:80 \
               --restart unless-stopped \
               $CLIENT_IMAGE
+  
