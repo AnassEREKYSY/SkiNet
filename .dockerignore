@@ -1,0 +1,6 @@
+.git
+.vscode
+client/node_modules
+client/dist
+**/bin
+**/obj
