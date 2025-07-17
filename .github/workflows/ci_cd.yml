@@ -5,8 +5,8 @@ on:
     branches: [ main ]
 
 env:
-  API_IMAGE: ghcr.io/anasserekysy/skinet-api:${{ github.sha }}
-  CLIENT_IMAGE: ghcr.io/anasserekysy/skinet-client:${{ github.sha }}
+  API_IMAGE: ghcr.io/${{ github.repository_owner }}/skinet-api:${{ github.sha }}
+  CLIENT_IMAGE: ghcr.io/${{ github.repository_owner }}/skinet-client:${{ github.sha }}
 
 jobs:
   build-client:
@@ -32,14 +32,14 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.GHCR_TOKEN }}
       - uses: docker/build-push-action@v4
         with:
           context: .
           file: API/Dockerfile
           push: true
           tags: |
-            ghcr.io/anasserekysy/skinet-api:latest
+            ghcr.io/${{ github.repository_owner }}/skinet-api:latest
             ${{ env.API_IMAGE }}
       - uses: docker/build-push-action@v4
         with:
@@ -47,7 +47,7 @@ jobs:
           file: Dockerfile
           push: true
           tags: |
-            ghcr.io/anasserekysy/skinet-client:latest
+            ghcr.io/${{ github.repository_owner }}/skinet-client:latest
             ${{ env.CLIENT_IMAGE }}
 
   deploy:
@@ -61,7 +61,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           envs: API_IMAGE,CLIENT_IMAGE
           script: |
-            docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
+            docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GHCR_TOKEN }}
             docker pull $API_IMAGE
             docker pull $CLIENT_IMAGE
             docker stop skinet-api || true
