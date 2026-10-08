@@ -31,10 +31,18 @@ Optional repository **variables**: `SKINET_CLIENT_PORT` (default 4200), `SKINET_
 ## One-time setup on the VM
 
 1. DNS: an `A` record `skinet` -> the VM IP (gives `skinet.anasserekysy.com`).
-2. Reverse proxy: add `deploy/nginx/skinet.conf` to the `reverse-proxy` container's sites
-   (`docker inspect reverse-proxy --format '{{range .Mounts}}{{.Source}} -> {{.Destination}}{{println}}{{end}}'`
-   shows the folder), reuse the certificate lines of the marketpulse site, then
-   `docker exec reverse-proxy nginx -t && docker exec reverse-proxy nginx -s reload`.
+2. Reverse proxy + certificate (own cert, webroot method like bday, no downtime):
+   ```bash
+   # a) HTTP block only, so Let's Encrypt can check the domain
+   sudo curl -fsSL https://raw.githubusercontent.com/AnassEREKYSY/SkiNet/main/deploy/nginx/skinet.conf \
+     | sed '/^server {$/,$!d' | awk '/^}/{print; exit} {print}' | sudo tee /opt/nginx/conf.d/skinet.conf >/dev/null
+   docker exec reverse-proxy nginx -t && docker exec reverse-proxy nginx -s reload
+   # b) certificate
+   sudo certbot certonly --webroot -w /etc/letsencrypt/acme-webroot -d skinet.anasserekysy.com
+   # c) full site (HTTPS)
+   sudo curl -fsSL https://raw.githubusercontent.com/AnassEREKYSY/SkiNet/main/deploy/nginx/skinet.conf -o /opt/nginx/conf.d/skinet.conf
+   docker exec reverse-proxy nginx -t && docker exec reverse-proxy nginx -s reload
+   ```
 3. Stripe webhook: in the Stripe dashboard (test mode) add an endpoint `https://<domain>/api/payments/webhook`
    listening to `payment_intent.succeeded` and `payment_intent.payment_failed`; put its signing secret in
    `SKINET_STRIPE_WEBHOOK_SECRET`.
