@@ -34,6 +34,8 @@ set_env CLIENT_PORT "${CLIENT_PORT:-}"
 set_env CLIENT_BIND "${CLIENT_BIND:-}"
 grep -q '^SQL_PASSWORD=' .env || { red "SQL_PASSWORD is missing (GitHub secret SKINET_SQL_PASSWORD)"; exit 1; }
 
+env_get() { grep "^$1=" .env | tail -n1 | cut -d= -f2- || true; }
+
 # 2. Registry login (images are private on GHCR)
 if [ -n "${GHCR_TOKEN:-}" ]; then
   echo "$GHCR_TOKEN" | docker login ghcr.io -u "${GHCR_USER:-anasserekysy}" --password-stdin >/dev/null
@@ -47,14 +49,17 @@ for c in skinet-api skinet-client; do
   fi
 done
 
-# 4. Pull and (re)start
-env_get() { grep "^$1=" .env | tail -n1 | cut -d= -f2- || true; }
+# 4. The reverse-proxy network must exist (it is created by the proxy setup, this only covers a fresh VM)
+net="$(env_get PROXY_NETWORK)"; net="${net:-web}"
+docker network inspect "$net" >/dev/null 2>&1 || { yellow "Creating Docker network $net"; docker network create "$net" >/dev/null; }
+
+# 5. Pull and (re)start
 green "Pulling images (tag: $(env_get IMAGE_TAG))"
 $COMPOSE pull
 green "Starting the stack"
 $COMPOSE up -d --remove-orphans
 
-# 5. Wait for the API (it migrates and seeds the database on first start)
+# 6. Wait for the API (it migrates and seeds the database on first start)
 port="$(env_get CLIENT_PORT)"; port="${port:-4200}"
 yellow "Waiting for http://127.0.0.1:${port}/api/health ..."
 for i in $(seq 1 40); do

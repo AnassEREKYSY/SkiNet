@@ -56,9 +56,10 @@ services:
     depends_on:
       - api
     ports:
-      # Only the website is published. Nginx on the VM proxies the domain (HTTPS) to this port.
+      # Local port, used by deploy.sh for the health check. Public traffic (HTTPS) comes from
+      # the reverse-proxy container through the shared "web" network, to skinet-client:80.
       - "${CLIENT_BIND:-127.0.0.1}:${CLIENT_PORT:-4200}:80"
-    networks: [skinet]
+    networks: [skinet, web]
 
 volumes:
   sql-data:
@@ -66,3 +67,7 @@ volumes:
 
 networks:
   skinet:
+  web:
+    # Shared Docker network of the VM's reverse-proxy (same as ShowTracker, MarketPulse...)
+    name: ${PROXY_NETWORK:-web}
+    external: true

@@ -9,7 +9,8 @@ Every push to `main` runs `.github/workflows/ci-cd.yml`:
    starts SQL Server, Redis, the API and the client, and waits for `/api/health`.
 
 Only the client container is published, on `127.0.0.1:4200`. It serves the Angular app and proxies `/api` and `/hub`
-to the API on the internal Docker network. Nginx on the VM handles the domain and HTTPS.
+to the API on the internal Docker network. The VM's `reverse-proxy` container (ports 80/443) reaches
+`skinet-client` through the shared `web` Docker network and handles the domain and HTTPS.
 
 ## GitHub secrets (Settings > Secrets and variables > Actions)
 
@@ -29,8 +30,11 @@ Optional repository **variables**: `SKINET_CLIENT_PORT` (default 4200), `SKINET_
 
 ## One-time setup on the VM
 
-1. DNS: an `A` record for your domain (e.g. `skinet.yourdomain.com`) pointing to the VM.
-2. Nginx site: copy `deploy/nginx/skinet.conf`, set your domain, enable it, then `sudo certbot --nginx -d <domain>`.
+1. DNS: an `A` record `skinet` -> the VM IP (gives `skinet.anasserekysy.com`).
+2. Reverse proxy: add `deploy/nginx/skinet.conf` to the `reverse-proxy` container's sites
+   (`docker inspect reverse-proxy --format '{{range .Mounts}}{{.Source}} -> {{.Destination}}{{println}}{{end}}'`
+   shows the folder), reuse the certificate lines of the marketpulse site, then
+   `docker exec reverse-proxy nginx -t && docker exec reverse-proxy nginx -s reload`.
 3. Stripe webhook: in the Stripe dashboard (test mode) add an endpoint `https://<domain>/api/payments/webhook`
    listening to `payment_intent.succeeded` and `payment_intent.payment_failed`; put its signing secret in
    `SKINET_STRIPE_WEBHOOK_SECRET`.
