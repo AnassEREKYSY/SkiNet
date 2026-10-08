@@ -1,15 +1,18 @@
-@if(product){
-    <mat-card appearance="raised" routerLink="/shop/{{product.id}}" class="product-card">
-        <img src="{{product.pictureUrl}}" alt="image of  {{product.name}}">
-        <mat-card-content class="mt-2">
-            <h2 class="text-xs font-semibold uppercase">{{product.name}}</h2>
-            <p class="font-light">{{product.price | currency}}</p>
-        </mat-card-content>
-        <mat-card-actions (click)="$event.stopPropagation()">
-            <button mat-stroked-button class="w-full custom-button" (click)="cartService.addItemToCart(product)">
-                <mat-icon>add_shopping_cart</mat-icon>
-                Add to cart
-            </button>
-        </mat-card-actions>
-    </mat-card>   
+@if (product) {
+  <article class="group card relative flex h-full flex-col overflow-hidden transition-shadow hover:shadow-[0_12px_32px_rgb(11_37_64_/_0.10)]">
+    <a [routerLink]="['/shop', product.id]" class="block aspect-square overflow-hidden bg-snow">
+      <img [src]="product.pictureUrl" [alt]="product.name" loading="lazy"
+           class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]" />
+    </a>
+    <div class="flex flex-1 flex-col gap-1 p-4">
+      <p class="text-xs font-medium uppercase tracking-wider text-ink-muted">{{ product.brand }} · {{ product.type }}</p>
+      <a [routerLink]="['/shop', product.id]" class="line-clamp-2 font-semibold leading-snug text-ink hover:text-navy">{{ product.name }}</a>
+      <div class="mt-auto flex items-center justify-between pt-3">
+        <span class="price text-lg">{{ product.price | currency }}</span>
+        <button type="button" class="add-btn" (click)="cartService.addItemToCart(product)" [attr.aria-label]="'Add ' + product.name + ' to cart'">
+          <mat-icon>add_shopping_cart</mat-icon>
+        </button>
+      </div>
+    </div>
+  </article>
 }

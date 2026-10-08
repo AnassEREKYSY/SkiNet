@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { MatBadge } from '@angular/material/badge';
-import { MatButton } from '@angular/material/button';
+import { UpperCasePipe } from '@angular/common';
+import { MatAnchor, MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { BusyService } from '../../core/services/busy.service';
@@ -17,7 +17,7 @@ import { IsAdminDirective } from '../../shared/directives/is-admin.directive';
   imports: [
     MatIcon,
     MatButton,
-    MatBadge,
+    MatAnchor,
     RouterLink,
     RouterLinkActive,
     MatProgressBar,
@@ -26,7 +26,8 @@ import { IsAdminDirective } from '../../shared/directives/is-admin.directive';
     MatMenuItem,
     MatMenu,
     MatDivider,
-    IsAdminDirective
+    IsAdminDirective,
+    UpperCasePipe,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
@@ -36,6 +37,7 @@ export class HeaderComponent {
   cartService=inject(CartService);
   accountService=inject(AccountService);
   private router=inject(Router);
+  mobileOpen = false;
 
   logout(){
     this.accountService.logout().subscribe({

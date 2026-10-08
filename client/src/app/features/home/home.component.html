@@ -1,21 +1,86 @@
-<div class="max-w-screen-2xl mx-auto px-4 mt-32">
-    <div class="flex flex-col items-center py-16 justify-center mt-20 rounded-2xl 
-        shadow-xl relative">
-        <img
-            class="absolute inset-0 w-full h-full object-cover rounded-2xl" 
-            src="../images/hero1.jpg" 
-            alt="ski resort image">
-        <div class="flex flex-col p-8 rounded-2xl items-center relative">
-            <h1 class="my-6 font-extrabold text-white text-6xl">
-                Welcome to SkiNet!
-            </h1>
-            <button
-                class="bg-gradient-to-r from-blue-600 to-cyan-500 font-semibold text-2xl 
-                text-white rounded-2xl px-8 py-4 border-2 border-transparent mt-8"
-                routerLink="/shop"
-            >
-                Go to shop
-            </button>
-        </div>
+<!-- Hero -->
+<section class="relative isolate overflow-hidden bg-snow">
+  <img src="/images/hero2.jpg" alt="" class="absolute inset-0 -z-10 h-full w-full object-cover object-bottom opacity-90" />
+  <div class="absolute inset-0 -z-10 bg-gradient-to-b from-navy-900/70 via-navy-900/20 to-transparent"></div>
+  <div class="container flex min-h-[520px] flex-col justify-start pb-40 pt-16 sm:pt-24">
+    <p class="eyebrow text-ice-200">Winter collection</p>
+    <h1 class="mt-4 max-w-2xl text-4xl font-bold leading-[1.1] tracking-tight text-white sm:text-6xl">
+      Gear up for fresh tracks.
+    </h1>
+    <p class="mt-5 max-w-lg text-lg text-ice-100/90">
+      Boards, boots, gloves and hats picked for the mountain. Find your size, check out in a minute.
+    </p>
+    <div class="mt-8 flex flex-wrap gap-3">
+      <a routerLink="/shop" mat-flat-button class="hero-primary">Shop all gear</a>
+      <a routerLink="/shop" [queryParams]="{ type: 'Boards' }" mat-stroked-button class="hero-secondary">Browse boards</a>
     </div>
-</div>
+  </div>
+</section>
+
+<!-- Categories -->
+<section class="container -mt-24 relative">
+  <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
+    @for (c of categories; track c.type) {
+      <a [routerLink]="['/shop']" [queryParams]="{ type: c.type }"
+         class="group card overflow-hidden transition-shadow hover:shadow-[0_12px_32px_rgb(11_37_64_/_0.10)]">
+        <div class="aspect-[4/3] bg-snow">
+          <img [src]="c.image" [alt]="c.label" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]" />
+        </div>
+        <div class="flex items-center justify-between px-4 py-3">
+          <span class="font-semibold text-navy">{{ c.label }}</span>
+          <mat-icon class="text-ink-muted transition-transform group-hover:translate-x-0.5">arrow_forward</mat-icon>
+        </div>
+      </a>
+    }
+  </div>
+</section>
+
+<!-- Featured -->
+<section class="container mt-20">
+  <div class="mb-6 flex items-end justify-between gap-4">
+    <div>
+      <p class="eyebrow">Popular right now</p>
+      <h2 class="h2 mt-2">Featured gear</h2>
+    </div>
+    <a routerLink="/shop" class="link hidden text-sm sm:inline-flex">View all products</a>
+  </div>
+  <div class="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
+    @for (product of featured(); track product.id) {
+      <app-product-item [product]="product"></app-product-item>
+    } @empty {
+      @for (i of [1, 2, 3, 4]; track i) {
+        <div class="card aspect-[3/4] animate-pulse bg-snow"></div>
+      }
+    }
+  </div>
+</section>
+
+<!-- Why Skinet -->
+<section class="container mt-20">
+  <div class="grid gap-4 rounded-2xl bg-snow p-6 sm:grid-cols-3 sm:p-8">
+    @for (p of perks; track p.title) {
+      <div class="flex gap-4">
+        <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-white text-navy shadow-[0_0_0_1px_theme(colors.line.DEFAULT)]">
+          <mat-icon>{{ p.icon }}</mat-icon>
+        </span>
+        <div>
+          <p class="font-semibold text-navy">{{ p.title }}</p>
+          <p class="mt-1 text-sm muted">{{ p.text }}</p>
+        </div>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- Banner -->
+<section class="container mt-20">
+  <div class="relative isolate overflow-hidden rounded-2xl bg-navy">
+    <img src="/images/hero3.jpg" alt="" class="absolute inset-0 -z-10 h-full w-full object-cover opacity-60" />
+    <div class="absolute inset-0 -z-10 bg-gradient-to-r from-navy-900/90 to-navy-900/10"></div>
+    <div class="max-w-md px-8 py-14">
+      <h2 class="text-3xl font-bold tracking-tight text-white">Ready for the first lift?</h2>
+      <p class="mt-3 text-ice-100/90">Create an account to track your orders and check out faster next time.</p>
+      <a routerLink="/account/register" mat-flat-button class="hero-primary mt-6">Create an account</a>
+    </div>
+  </div>
+</section>

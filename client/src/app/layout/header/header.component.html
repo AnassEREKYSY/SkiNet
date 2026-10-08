@@ -1,51 +1,75 @@
-<header class="border-b p-3 w-full shadow-md max-h-20 fixed top-0 z-50 bg-white">
-    <div class="flex align-middle items-center justify-between max-w-screen-2xl mx-auto">
-        <img routerLink="/" src="/images/logo.png" alt="app logo" class="max-h-16">
-        <nav class="flex gap-3 my-2 uppercase text-2xl">
-            <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Home</a>
-            <a routerLink="/shop" routerLinkActive="active">Shop</a>
-            <a routerLink="/test-error" routerLinkActive="active">Errors</a>
-            <a *appIsAdmin routerLink="/admin" routerLinkActive="active">Admin</a>
-        </nav>
-        <div class="flex gap-3 align-middle">
-            <a  routerLink="/cart" 
-                routerLinkActive="active" 
-                matBadge="{{cartService.itemCount()}}" 
-                matBadgeSize="large" 
-                class="custom-badge mt-2 mr-2 "
-            >
-                <mat-icon>shopping_cart</mat-icon>
-            </a>
-            @if(accountService.currentUser()){
-                <button mat-button [matMenuTriggerFor]="menu">
-                    <mat-icon>arrow_drop_down</mat-icon>
-                    <span>{{accountService.currentUser()?.email}}</span>
-                </button>
-            }
-            @else{
-                <button routerLink="account/login" mat-stroked-button>Login</button>
-                <button routerLink="account/register" mat-stroked-button>Register</button>
-            }
-        </div>
+<header class="fixed inset-x-0 top-0 z-50 border-b border-line bg-white/95 backdrop-blur">
+  <div class="container flex h-16 items-center justify-between gap-4">
+    <div class="flex items-center gap-10">
+      <a routerLink="/" class="flex items-center gap-2" aria-label="Skinet home">
+        <img src="/images/logo-mark.svg" alt="" class="h-8 w-8" />
+        <span class="text-lg font-bold tracking-tight text-navy">Skinet</span>
+      </a>
+      <nav class="hidden items-center gap-1 md:flex" aria-label="Main">
+        <a routerLink="/" routerLinkActive="nav-active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link">Home</a>
+        <a routerLink="/shop" routerLinkActive="nav-active" class="nav-link">Shop</a>
+        <a *appIsAdmin routerLink="/admin" routerLinkActive="nav-active" class="nav-link">Admin</a>
+      </nav>
     </div>
+
+    <div class="flex items-center gap-2">
+      <a routerLink="/cart" class="icon-link relative" aria-label="Cart">
+        <mat-icon>shopping_bag</mat-icon>
+        @if (cartService.itemCount()) {
+          <span class="absolute -right-0.5 -top-0.5 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-navy px-1 text-[10px] font-bold text-white">
+            {{ cartService.itemCount() }}
+          </span>
+        }
+      </a>
+
+      @if (accountService.currentUser(); as user) {
+        <button type="button" class="flex items-center gap-2 rounded-xl px-2 py-1.5 hover:bg-snow" [matMenuTriggerFor]="menu">
+          <span class="grid h-8 w-8 place-items-center rounded-full bg-ice-100 text-xs font-bold text-navy">
+            {{ (user.firstName || user.email)[0] | uppercase }}
+          </span>
+          <span class="hidden text-sm font-medium text-ink sm:inline">{{ user.firstName || user.email }}</span>
+          <mat-icon class="text-ink-muted">expand_more</mat-icon>
+        </button>
+      } @else {
+        <a routerLink="/account/login" class="hidden rounded-xl px-3 py-2 text-sm font-medium text-ink hover:bg-snow sm:inline-flex">Sign in</a>
+        <a routerLink="/account/register" mat-flat-button>Create account</a>
+      }
+
+      <button type="button" class="icon-link md:hidden" (click)="mobileOpen = !mobileOpen" aria-label="Menu">
+        <mat-icon>{{ mobileOpen ? 'close' : 'menu' }}</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  @if (mobileOpen) {
+    <nav class="border-t border-line bg-white md:hidden" aria-label="Mobile">
+      <div class="container flex flex-col py-2" (click)="mobileOpen = false">
+        <a routerLink="/" class="py-2 text-sm font-medium">Home</a>
+        <a routerLink="/shop" class="py-2 text-sm font-medium">Shop</a>
+        <a *appIsAdmin routerLink="/admin" class="py-2 text-sm font-medium">Admin</a>
+        @if (!accountService.currentUser()) {
+          <a routerLink="/account/login" class="py-2 text-sm font-medium">Sign in</a>
+        }
+      </div>
+    </nav>
+  }
+
+  @if (busyService.loading) {
+    <mat-progress-bar mode="indeterminate" class="absolute inset-x-0 -bottom-px h-0.5"></mat-progress-bar>
+  }
 </header>
 
-@if(busyService.loading){
-    <mat-progress-bar mode="indeterminate" class="fixed top-20 z-50"></mat-progress-bar>
-}
-
-<mat-menu #menu="matMenu" class="px-5">
-    <button mat-menu-item class="px-3" routerLink="/cart">
-        <mat-icon>shopping_cart</mat-icon>
-        My cart
-    </button>
-    <button mat-menu-item class="px-3" routerLink="/orders">
-        <mat-icon>history</mat-icon>
-        My orders
-    </button>
+<mat-menu #menu="matMenu" xPosition="before">
+  @if (accountService.currentUser(); as user) {
+    <div class="px-4 pb-2 pt-1">
+      <p class="text-sm font-semibold text-ink">{{ user.firstName }} {{ user.lastName }}</p>
+      <p class="text-xs muted">{{ user.email }}</p>
+    </div>
     <mat-divider></mat-divider>
-    <button mat-menu-item class="px-3" (click)="logout()">
-        <mat-icon>logout</mat-icon>
-        Logout
-    </button>
+  }
+  <button mat-menu-item routerLink="/cart"><mat-icon>shopping_bag</mat-icon>My cart</button>
+  <button mat-menu-item routerLink="/orders"><mat-icon>receipt_long</mat-icon>My orders</button>
+  <button *appIsAdmin mat-menu-item routerLink="/admin"><mat-icon>admin_panel_settings</mat-icon>Admin</button>
+  <mat-divider></mat-divider>
+  <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon>Sign out</button>
 </mat-menu>
