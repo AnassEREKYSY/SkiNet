@@ -18,6 +18,17 @@ public class StoreContextSeed
             await userManager.CreateAsync(user,"Pa$$w0rd");
             await userManager.AddToRoleAsync(user,"Admin");
         }
+
+        // Demo customer, shown on the sign-in page ("Demo accounts").
+        if(!userManager.Users.Any(x=>x.UserName == "tom@test.com")){
+            var demo= new AppUser{
+                UserName="tom@test.com",
+                Email="tom@test.com",
+                FirstName="Tom",
+                LastName="Smith"
+            };
+            await userManager.CreateAsync(demo,"Pa$$w0rd");
+        }
         
         var path=Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         if(!context.Products.Any()){

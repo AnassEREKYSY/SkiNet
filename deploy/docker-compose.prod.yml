@@ -1,0 +1,68 @@
+# Skinet production stack on the OVH VM.
+# Values come from ~/skinet/.env, written by deploy.sh from the GitHub secrets.
+name: skinet
+
+services:
+  sql:
+    image: ${SQL_IMAGE:-mcr.microsoft.com/azure-sql-edge:latest}
+    container_name: skinet-sql
+    restart: unless-stopped
+    environment:
+      ACCEPT_EULA: "1"
+      MSSQL_SA_PASSWORD: ${SQL_PASSWORD:?SQL_PASSWORD is required}
+    volumes:
+      - sql-data:/var/opt/mssql
+    networks: [skinet]
+
+  redis:
+    image: redis:7-alpine
+    container_name: skinet-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks: [skinet]
+
+  api:
+    image: ghcr.io/anasserekysy/skinet-api:${IMAGE_TAG:-latest}
+    container_name: skinet-api
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:80
+      ConnectionStrings__DefaultConnection: Server=sql,1433;Database=SkiNet;User Id=sa;Password=${SQL_PASSWORD};TrustServerCertificate=True
+      ConnectionStrings__Redis: redis:6379,abortConnect=false
+      StripeSettings__PublishableKey: ${STRIPE_PUBLISHABLE_KEY:-}
+      StripeSettings__SecretKey: ${STRIPE_SECRET_KEY:-}
+      StripeSettings__WhSecret: ${STRIPE_WEBHOOK_SECRET:-}
+    depends_on:
+      sql:
+        condition: service_started
+      redis:
+        condition: service_healthy
+    networks:
+      skinet:
+        aliases: [api]
+
+  client:
+    image: ghcr.io/anasserekysy/skinet-client:${IMAGE_TAG:-latest}
+    container_name: skinet-client
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      # Only the website is published. Nginx on the VM proxies the domain (HTTPS) to this port.
+      - "${CLIENT_BIND:-127.0.0.1}:${CLIENT_PORT:-4200}:80"
+    networks: [skinet]
+
+volumes:
+  sql-data:
+  redis-data:
+
+networks:
+  skinet:
