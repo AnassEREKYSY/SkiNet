@@ -1,0 +1,91 @@
+.product-grid {
+  @apply grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4;
+}
+
+.search {
+  @apply relative flex w-full items-center sm:max-w-sm;
+
+  input {
+    @apply h-11 w-full rounded-[10px] border border-line-strong bg-white pl-10 pr-10 text-sm text-ink outline-none transition-colors;
+
+    &::placeholder {
+      @apply text-ink-muted;
+    }
+
+    &:focus {
+      @apply border-navy ring-2 ring-ice-200;
+    }
+
+    // Use our own clear button.
+    &::-webkit-search-cancel-button {
+      -webkit-appearance: none;
+    }
+  }
+}
+
+.search-icon {
+  @apply pointer-events-none absolute left-3 text-ink-muted;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.search-clear {
+  @apply absolute right-2 grid h-7 w-7 place-items-center rounded-lg text-ink-muted hover:bg-snow hover:text-navy;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.toolbar-btn {
+  --mdc-outlined-button-label-text-color: theme('colors.ink.DEFAULT');
+  --mdc-outlined-button-outline-color: theme('colors.line.strong');
+  white-space: nowrap;
+}
+
+.filter-check {
+  --mdc-checkbox-state-layer-size: 32px;
+  --mat-checkbox-label-text-color: theme('colors.ink.DEFAULT');
+  --mat-checkbox-label-text-size: 14px;
+  --mdc-checkbox-unselected-icon-color: theme('colors.line.strong');
+  --mdc-checkbox-selected-icon-color: theme('colors.navy.DEFAULT');
+  --mdc-checkbox-selected-hover-icon-color: theme('colors.navy.DEFAULT');
+  --mdc-checkbox-selected-focus-icon-color: theme('colors.navy.DEFAULT');
+  margin-left: -6px;
+}
+
+.filter-chip {
+  @apply inline-flex items-center gap-1 rounded-full bg-ice-50 py-1 pl-3 pr-2 text-sm font-medium text-navy transition-colors hover:bg-ice-100;
+
+  mat-icon {
+    @apply text-ink-muted;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.shop-paginator {
+  --mat-paginator-container-text-color: theme('colors.ink.muted');
+  --mat-paginator-container-text-size: 13px;
+  --mat-paginator-enabled-icon-color: theme('colors.navy.DEFAULT');
+  --mat-paginator-disabled-icon-color: theme('colors.line.strong');
+  --mat-paginator-container-size: 48px;
+  --mat-paginator-form-field-container-height: 36px;
+  --mat-paginator-form-field-container-vertical-padding: 6px;
+  background: transparent;
+}
+
+:host ::ng-deep .shop-paginator .mat-mdc-paginator-range-label {
+  // Page X of Y is shown on the left instead.
+  display: none;
+}
+
+@media (max-width: 639px) {
+  :host ::ng-deep .shop-paginator .mat-mdc-paginator-page-size {
+    display: none;
+  }
+}

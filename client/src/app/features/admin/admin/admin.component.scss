@@ -1,0 +1,89 @@
+.status-filter {
+  --mat-form-field-container-height: 44px;
+  --mat-form-field-container-vertical-padding: 10px;
+  --mdc-outlined-text-field-container-shape: 10px;
+  --mdc-outlined-text-field-outline-color: theme('colors.line.strong');
+  --mat-select-trigger-text-size: 14px;
+}
+
+.admin-table {
+  width: 100%;
+  --mat-table-background-color: #fff;
+  --mat-table-header-headline-color: theme('colors.ink.muted');
+  --mat-table-header-headline-size: 13px;
+  --mat-table-header-headline-weight: 500;
+  --mat-table-header-container-height: 44px;
+  --mat-table-row-item-container-height: 60px;
+  --mat-table-row-item-label-text-color: theme('colors.ink.DEFAULT');
+  --mat-table-row-item-label-text-size: 14px;
+  --mat-table-row-item-outline-color: theme('colors.line.DEFAULT');
+  --mat-table-row-item-outline-width: 1px;
+
+  .mat-mdc-header-row {
+    background: theme('colors.snow');
+  }
+
+  .mat-mdc-header-cell,
+  .mat-mdc-cell {
+    padding: 0 16px;
+
+    &:first-of-type {
+      padding-left: 24px;
+    }
+
+    &:last-of-type {
+      padding-right: 16px;
+    }
+
+    @media (max-width: 639px) {
+      padding: 0 10px;
+
+      &:first-of-type {
+        padding-left: 16px;
+      }
+
+      &:last-of-type {
+        padding-right: 8px;
+      }
+    }
+  }
+
+  .mat-mdc-row {
+    transition: background-color 0.15s;
+
+    &:hover {
+      background: rgb(241 248 253 / 0.6); // ice-50
+    }
+  }
+
+  .mat-mdc-row:last-of-type .mat-mdc-cell {
+    border-bottom-color: transparent;
+  }
+}
+
+.action-btn {
+  --mdc-icon-button-state-layer-size: 36px;
+  --mdc-icon-button-icon-size: 20px;
+  --mdc-icon-button-icon-color: theme('colors.ink.muted');
+  padding: 8px;
+
+  &:hover:not([disabled]) {
+    --mdc-icon-button-icon-color: theme('colors.navy.DEFAULT');
+  }
+
+  &.action-danger:hover:not([disabled]) {
+    --mdc-icon-button-icon-color: theme('colors.danger');
+  }
+}
+
+.admin-paginator {
+  border-top: 1px solid theme('colors.line.DEFAULT');
+  --mat-paginator-container-text-color: theme('colors.ink.muted');
+  --mat-paginator-container-text-size: 13px;
+  --mat-paginator-container-background-color: #fff;
+  --mat-paginator-enabled-icon-color: theme('colors.navy.DEFAULT');
+  --mat-paginator-disabled-icon-color: theme('colors.line.strong');
+  --mat-paginator-form-field-container-height: 36px;
+  --mat-paginator-form-field-container-vertical-padding: 6px;
+  --mat-paginator-select-trigger-text-size: 13px;
+}

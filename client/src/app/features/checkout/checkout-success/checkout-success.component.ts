@@ -3,7 +3,8 @@ import { MatButton } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
 import { SignalrService } from '../../../core/services/signalr.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { CurrencyPipe, DatePipe, NgIf } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
 import { AddressPipe } from '../../../shared/pipes/address.pipe';
 import { PaymentCardPipe } from '../../../shared/pipes/payment-card.pipe';
 import { OrderService } from '../../../core/services/order.service';
@@ -19,7 +20,7 @@ import { OrderService } from '../../../core/services/order.service';
     CurrencyPipe,
     AddressPipe,
     PaymentCardPipe,
-    NgIf,
+    MatIcon,
   ],
   templateUrl: './checkout-success.component.html',
   styleUrl: './checkout-success.component.scss'

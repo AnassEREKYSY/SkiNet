@@ -1,11 +1,12 @@
 @if (busyService.busyRequestCount === 0) {
-    <div class="max-w-screen-xl mx-auto mt-32 px-10 py-4 bg-white rounded-lg shadow-md w-full">
-        <div class="flex flex-col items-center justify-center py-12 w-full">
-            <mat-icon class="icon-display mb-8">{{icon()}}</mat-icon>
-            <p class="text-gray-600 text-lg font-semibold mb-4">
-                {{message()}}
-            </p>
-            <button mat-flat-button (click)="onAction()">{{actionText()}}</button>
-        </div>
-    </div>
+  <div class="card flex w-full flex-col items-center px-6 py-14 text-center sm:py-16">
+    <span class="grid h-16 w-16 place-items-center rounded-full bg-ice-100 text-navy">
+      <mat-icon class="!h-8 !w-8 !text-[32px]">{{ icon() }}</mat-icon>
+    </span>
+    <h2 class="mt-5 text-lg font-bold text-navy">{{ message() }}</h2>
+    @if (description()) {
+      <p class="mt-1.5 max-w-sm text-sm muted">{{ description() }}</p>
+    }
+    <button mat-flat-button type="button" class="mt-6" (click)="onAction()">{{ actionText() }}</button>
+  </div>
 }

@@ -1,0 +1,14 @@
+:host {
+  display: block;
+}
+
+.filter-check {
+  --mdc-checkbox-state-layer-size: 32px;
+  --mat-checkbox-label-text-color: theme('colors.ink.DEFAULT');
+  --mat-checkbox-label-text-size: 14px;
+  --mdc-checkbox-unselected-icon-color: theme('colors.line.strong');
+  --mdc-checkbox-selected-icon-color: theme('colors.navy.DEFAULT');
+  --mdc-checkbox-selected-hover-icon-color: theme('colors.navy.DEFAULT');
+  --mdc-checkbox-selected-focus-icon-color: theme('colors.navy.DEFAULT');
+  margin-left: -6px;
+}

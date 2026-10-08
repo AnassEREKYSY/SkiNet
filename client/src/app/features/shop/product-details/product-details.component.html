@@ -1,44 +1,91 @@
-@if (product) {
-    <section class="py-8">
-        <div class="max-w-screen-2xl px-4 mx-auto">
-            <div class="grid grid-cols-2 gap-8">
-                <div class="max-w-xl mx-auto">
-                    <img class="w-full" src="{{product.pictureUrl}}" alt="product image">
-                </div>
+<div class="container py-8 sm:py-10">
+  @if (product) {
+    <nav class="flex min-w-0 items-center gap-1.5 text-sm muted" aria-label="Breadcrumb">
+      <a routerLink="/shop" class="shrink-0 hover:text-navy">Shop</a>
+      <mat-icon class="crumb-sep">chevron_right</mat-icon>
+      <a routerLink="/shop" [queryParams]="{ type: product.type }" class="shrink-0 hover:text-navy">{{ product.type }}</a>
+      <mat-icon class="crumb-sep">chevron_right</mat-icon>
+      <span class="truncate font-medium text-ink" aria-current="page">{{ product.name }}</span>
+    </nav>
 
-                <div>
-                    <h1 class="text-2xl font-semibold text-gray-900">{{product.name}}</h1>
-                    
-                    <p>You have {{quantityInCart}} of this item in your cart</p>
-                    
-                    <div class="mt-4 items-center gap-4 flex">
-                        <p class="text-3xl font-extrabold text-gray-900">
-                            {{product.price | currency}}
-                        </p>
-                    </div>
+    <div class="mt-6 grid gap-8 lg:grid-cols-2 lg:gap-14">
+      <div class="aspect-square overflow-hidden rounded-2xl bg-snow">
+        <img class="h-full w-full object-cover" [src]="product.pictureUrl" [alt]="product.name">
+      </div>
 
-                    <div class="flex gap-4 mt-6">
-                        <button [disabled]="quantity === quantityInCart" 
-                            (click)="updateCart()"
-                            mat-flat-button class="match-input-height">
-                            <mat-icon>shopping_cart</mat-icon>
-                            {{getButtonText()}}
-                        </button>
+      <div class="flex flex-col lg:py-4">
+        <p class="eyebrow">{{ product.brand }} · {{ product.type }}</p>
+        <h1 class="h1 mt-3">{{ product.name }}</h1>
+        <p class="price mt-4 text-3xl">{{ product.price | currency }}</p>
 
-                        <mat-form-field appearance="outline" class="flex">
-                            <mat-label>Quantity</mat-label>
-                            <input matInput min="0" [(ngModel)]="quantity" type="number">
-                        </mat-form-field>
-                    </div>
+        <p class="mt-5 leading-relaxed muted">{{ product.description }}</p>
 
-                    <mat-divider></mat-divider>
+        <div class="divider my-7"></div>
 
-                    <p class="mt-6 text-gray-500">
-                        {{product.description}}
-                    </p>
-                </div>
+        <div class="flex items-stretch gap-3">
+          <div class="stepper" role="group" aria-label="Quantity">
+            <button type="button" (click)="decrement()" [disabled]="quantity <= minQuantity" aria-label="Decrease quantity">
+              <mat-icon>remove</mat-icon>
+            </button>
+            <span class="w-10 text-center font-semibold tabular-nums text-ink" aria-live="polite">{{ quantity }}</span>
+            <button type="button" (click)="increment()" aria-label="Increase quantity">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
 
-            </div>
+          <button mat-flat-button type="button" class="cart-btn min-w-0 flex-1" [disabled]="quantity === quantityInCart" (click)="updateCart()">
+            <mat-icon>shopping_bag</mat-icon>
+            {{ getButtonText() }}
+          </button>
         </div>
-    </section>
-}
+
+        <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+          @if (product.quantityInStock > 0) {
+            <span class="flex items-center gap-1.5 font-medium text-success">
+              <span class="h-2 w-2 rounded-full bg-success"></span>In stock
+            </span>
+          } @else {
+            <span class="flex items-center gap-1.5 font-medium text-danger">
+              <span class="h-2 w-2 rounded-full bg-danger"></span>Out of stock
+            </span>
+          }
+          @if (quantityInCart > 0) {
+            <a routerLink="/cart" class="flex items-center gap-1 muted hover:text-navy">
+              <mat-icon class="note-icon">check_circle</mat-icon>
+              {{ quantityInCart }} in your cart
+            </a>
+          }
+        </div>
+
+        <ul class="soft-box mt-8 divide-y divide-line px-5">
+          <li class="flex items-center gap-3 py-4">
+            <mat-icon class="text-navy">lock</mat-icon>
+            <div>
+              <p class="text-sm font-semibold text-ink">Secure checkout</p>
+              <p class="text-sm muted">Payments are handled by Stripe.</p>
+            </div>
+          </li>
+          <li class="flex items-center gap-3 py-4">
+            <mat-icon class="text-navy">local_shipping</mat-icon>
+            <div>
+              <p class="text-sm font-semibold text-ink">Tracked delivery</p>
+              <p class="text-sm muted">Choose your delivery option at checkout.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  } @else {
+    <div class="h-4 w-48 animate-pulse rounded bg-snow"></div>
+    <div class="mt-6 grid gap-8 lg:grid-cols-2 lg:gap-14" aria-hidden="true">
+      <div class="aspect-square animate-pulse rounded-2xl bg-snow"></div>
+      <div class="space-y-4 lg:py-4">
+        <div class="h-3 w-32 animate-pulse rounded bg-snow"></div>
+        <div class="h-9 w-3/4 animate-pulse rounded bg-snow"></div>
+        <div class="h-8 w-28 animate-pulse rounded bg-snow"></div>
+        <div class="h-20 w-full animate-pulse rounded bg-snow"></div>
+        <div class="h-12 w-full animate-pulse rounded-xl bg-snow"></div>
+      </div>
+    </div>
+  }
+</div>

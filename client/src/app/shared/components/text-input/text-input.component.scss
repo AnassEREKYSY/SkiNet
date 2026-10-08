@@ -1,0 +1,27 @@
+:host {
+  display: block;
+}
+
+.field {
+  @apply block h-11 w-full rounded-[10px] border border-line-strong bg-white px-3.5 text-[15px] text-ink outline-none transition-colors;
+
+  &::placeholder {
+    @apply text-ink-muted/70;
+  }
+
+  &:hover {
+    @apply border-ink-muted/50;
+  }
+
+  &:focus {
+    @apply border-navy ring-2 ring-ice-200;
+  }
+
+  &.field-error {
+    @apply border-danger;
+
+    &:focus {
+      @apply ring-danger/15;
+    }
+  }
+}

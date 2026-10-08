@@ -1,31 +1,35 @@
-<div class="mt-4 w-full">
-    <h4 class="text-lg font-semibold">Belling and delivery information</h4>
-    <dl>
-        <dt class="font-medium">Shipping Address</dt>
-        <dt class="mt-1 text-gray-500">{{confirmationToken?.shipping | address}}</dt>
-        <dt class="font-medium">Payment details</dt>
-        <dt class="mt-1 text-gray-500">{{confirmationToken?.payment_method_preview | paymentCard}}</dt>
-
-    </dl>
+<div class="mt-5 grid gap-3 sm:grid-cols-2">
+  <div class="soft-box p-4">
+    <p class="flex items-center gap-2 text-sm font-semibold text-ink">
+      <mat-icon class="!h-[18px] !w-[18px] !text-[18px] text-ink-muted">local_shipping</mat-icon>
+      Shipping address
+    </p>
+    <p class="mt-2 text-sm text-ink-muted">{{ confirmationToken?.shipping | address }}</p>
+    @if (cartService.selectedDelivery(); as delivery) {
+      <p class="mt-2 text-sm text-ink">{{ delivery.shortName }} · <span class="text-ink-muted">{{ delivery.deliveryTime }}</span></p>
+    }
+  </div>
+  <div class="soft-box p-4">
+    <p class="flex items-center gap-2 text-sm font-semibold text-ink">
+      <mat-icon class="!h-[18px] !w-[18px] !text-[18px] text-ink-muted">credit_card</mat-icon>
+      Payment
+    </p>
+    <p class="mt-2 text-sm text-ink-muted">{{ confirmationToken?.payment_method_preview | paymentCard }}</p>
+  </div>
 </div>
 
-<div class="mt-6 mx-auto">
-    <div class="border-b border-gray-200">
-        <table class="w-full text-center">
-            <tbody class="divide-y divide-gray-200">
-                @for (item of cartService.cart()?.items; track item.productId) {
-                    <tr>
-                        <td class="py-4">
-                            <div class="flex items-center gap-4">
-                                <img src="{{item.pictureUrl}}" alt="product image" class="w-10 h-10">
-                                <span>{{item.productName}}</span>
-                            </div>
-                        </td>
-                        <td class="p-4">x{{item.quantity}}</td>
-                        <td class="p-4 text-right">{{item.price | currency}}</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</div>
+<h3 class="mt-6 text-sm font-semibold text-ink">Items</h3>
+<ul class="mt-2 divide-y divide-line">
+  @for (item of cartService.cart()?.items; track item.productId) {
+    <li class="flex items-center gap-4 py-3">
+      <div class="h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-snow">
+        <img [src]="item.pictureUrl" [alt]="item.productName" class="h-full w-full object-cover" />
+      </div>
+      <div class="min-w-0 flex-1">
+        <p class="truncate text-sm font-medium text-ink">{{ item.productName }}</p>
+        <p class="text-xs text-ink-muted">{{ item.quantity }} × {{ item.price | currency }}</p>
+      </div>
+      <p class="price text-sm">{{ item.price * item.quantity | currency }}</p>
+    </li>
+  }
+</ul>

@@ -1,0 +1,10 @@
+:host {
+  display: block;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.danger-btn {
+  --mdc-filled-button-container-color: theme('colors.danger');
+  --mdc-filled-button-label-text-color: #fff;
+}

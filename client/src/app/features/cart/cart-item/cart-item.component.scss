@@ -1,0 +1,17 @@
+.stepper {
+  @apply inline-flex h-10 items-center rounded-xl border border-line bg-white;
+
+  button {
+    @apply grid h-10 w-9 place-items-center text-ink-muted transition-colors hover:text-navy;
+
+    mat-icon {
+      @apply text-[18px] leading-none;
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+.remove-btn {
+  @apply grid h-10 w-10 shrink-0 place-items-center rounded-xl text-ink-muted transition-colors hover:bg-snow hover:text-danger;
+}

@@ -4,6 +4,7 @@ import { CurrencyPipe } from '@angular/common';
 import { ConfirmationToken } from '@stripe/stripe-js';
 import { AddressPipe } from '../../../shared/pipes/address.pipe';
 import { PaymentCardPipe } from '../../../shared/pipes/payment-card.pipe';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-checkout-review',
@@ -11,7 +12,8 @@ import { PaymentCardPipe } from '../../../shared/pipes/payment-card.pipe';
   imports: [
     CurrencyPipe,
     AddressPipe,
-    PaymentCardPipe
+    PaymentCardPipe,
+    MatIcon
   ],
   templateUrl: './checkout-review.component.html',
   styleUrl: './checkout-review.component.scss'

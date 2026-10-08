@@ -1,71 +1,152 @@
-@if (products && products.count > 0) {
-    <div class="flex flex-col gap-3">
-        <div class="flex justify-between">
-            <mat-paginator
-                class="bg-white"
-                (page)="handlePageEvent($event)"
-                [length]="products.count"
-                [pageSize]="shopParams.pageSize"
-                [showFirstLastButtons]="true"
-                [pageSizeOptions]="pageSizeOptions"
-                [pageIndex]="shopParams.pageNumber - 1"
-                aria-label="Select page"
-            >
-            </mat-paginator>
-    
-            <form 
-                #searchForm="ngForm" 
-                (ngSubmit)="onSearchChange()"
-                class="relative flex items-center w-full max-w-md mx-4"
-            >
-                <input 
-                    type="search" 
-                    class="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg"
-                    placeholder="Search"
-                    name="search"
-                    [(ngModel)]="shopParams.search"
-                />
-                <button mat-icon-button type="submit" 
-                    class="absolute inset-y-0 right-8 top-2 flex items-center pl-3"
-                >
-                    <mat-icon>search</mat-icon>
-                </button>
-            </form>
-    
-            <div class="flex gap-3">
-                <button class="match-input-height" mat-stroked-button (click)="openFiltersDialog()">
-                    <mat-icon>filter_list</mat-icon>
-                    Filters
-                </button>
-                <button class="match-input-height" mat-stroked-button [matMenuTriggerFor]="sortMenu">
-                    <mat-icon>swap_vert</mat-icon>
-                    Sort
-                </button>
-            </div>
-    
-        </div>
-    
-        <div class="grid grid-cols-5 gap-4">
-            @for (product of products.data; track product.id) {
-            <app-product-item [product]="product"></app-product-item>
-            }
-        </div>
+<div class="container py-10">
+  <!-- Title -->
+  <div class="flex flex-wrap items-end justify-between gap-2">
+    <div>
+      <h1 class="h1">Shop</h1>
+      <p class="mt-2 muted">
+        @if (products) {
+          {{ products.count }} {{ products.count === 1 ? 'product' : 'products' }}
+        } @else {
+          Loading products
+        }
+      </p>
     </div>
-    
-    <mat-menu #sortMenu="matMenu">
-        <mat-selection-list [multiple]="false" (selectionChange)="onSortChange($event)">
-            @for (sort of sortOptions; track $index) {
-                <mat-list-option [value]="sort.value" [selected]="shopParams.sort === sort.value">
-                    {{sort.name}}
-                </mat-list-option>
+  </div>
+
+  <div class="mt-8 lg:grid lg:grid-cols-[240px_1fr] lg:gap-10">
+    <!-- Sidebar filters (desktop) -->
+    <aside class="hidden lg:block" aria-label="Filters">
+      <div class="sticky top-24 space-y-8">
+        <div>
+          <p class="mb-3 text-sm font-semibold text-navy">Type</p>
+          <ul class="space-y-0.5">
+            @for (type of shopService.types; track type) {
+              <li>
+                <mat-checkbox class="filter-check" [checked]="isSelected('types', type)"
+                              (change)="toggleFilter('types', type, $event.checked)">{{ type }}</mat-checkbox>
+              </li>
             }
-        </mat-selection-list>
-    </mat-menu>
-} @else {
-    <app-empty-state 
-        message="No products match this filter"
-        icon="filter_alt_off"
-        actionText="Reset filters"
-        (action)="resetFilters()"
-    />
-}
+          </ul>
+        </div>
+        <div class="divider"></div>
+        <div>
+          <p class="mb-3 text-sm font-semibold text-navy">Brand</p>
+          <ul class="space-y-0.5">
+            @for (brand of shopService.brands; track brand) {
+              <li>
+                <mat-checkbox class="filter-check" [checked]="isSelected('brands', brand)"
+                              (change)="toggleFilter('brands', brand, $event.checked)">{{ brand }}</mat-checkbox>
+              </li>
+            }
+          </ul>
+        </div>
+        @if (hasActiveFilters) {
+          <button type="button" class="link text-sm" (click)="resetFilters()">Clear all filters</button>
+        }
+      </div>
+    </aside>
+
+    <div class="min-w-0">
+      <!-- Toolbar -->
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <form #searchForm="ngForm" (ngSubmit)="onSearchChange()" class="search" role="search">
+          <mat-icon class="search-icon">search</mat-icon>
+          <input type="search" name="search" placeholder="Search products" aria-label="Search products"
+                 [(ngModel)]="shopParams.search" />
+          @if (shopParams.search) {
+            <button type="button" class="search-clear" (click)="clearSearch()" aria-label="Clear search">
+              <mat-icon>close</mat-icon>
+            </button>
+          }
+        </form>
+
+        <div class="grid grid-cols-2 gap-2 sm:ml-auto sm:flex lg:block">
+          <button mat-stroked-button type="button" class="toolbar-btn lg:hidden" (click)="openFiltersDialog()">
+            <mat-icon>tune</mat-icon>
+            Filters
+            @if (activeFilterCount) {
+              <span class="ml-1 inline-flex h-5 min-w-[20px] items-center justify-center align-middle rounded-full bg-navy px-1.5 text-[11px] font-bold text-white">{{ activeFilterCount }}</span>
+            }
+          </button>
+          <button mat-stroked-button type="button" class="toolbar-btn" [matMenuTriggerFor]="sortMenu">
+            <mat-icon>swap_vert</mat-icon>
+            <span class="muted hidden font-normal sm:inline">Sort:&nbsp;</span>{{ sortLabel }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Active filter chips -->
+      @if (activeFilterCount) {
+        <div class="mt-4 flex flex-wrap items-center gap-2">
+          @for (type of shopParams.types; track type) {
+            <button type="button" class="filter-chip" (click)="removeFilter('types', type)" [attr.aria-label]="'Remove ' + type">
+              {{ type }}<mat-icon>close</mat-icon>
+            </button>
+          }
+          @for (brand of shopParams.brands; track brand) {
+            <button type="button" class="filter-chip" (click)="removeFilter('brands', brand)" [attr.aria-label]="'Remove ' + brand">
+              {{ brand }}<mat-icon>close</mat-icon>
+            </button>
+          }
+          <button type="button" class="link ml-1 text-sm" (click)="resetFilters()">Clear all</button>
+        </div>
+      }
+
+      <!-- Results -->
+      <div class="mt-6">
+        @if (!products && loading) {
+          <div class="product-grid">
+            @for (i of skeletons; track i) {
+              <div class="card overflow-hidden" aria-hidden="true">
+                <div class="aspect-square animate-pulse bg-snow"></div>
+                <div class="space-y-2 p-4">
+                  <div class="h-3 w-1/2 animate-pulse rounded bg-snow"></div>
+                  <div class="h-4 w-4/5 animate-pulse rounded bg-snow"></div>
+                  <div class="h-5 w-1/3 animate-pulse rounded bg-snow pt-3"></div>
+                </div>
+              </div>
+            }
+          </div>
+        } @else if (products && products.count > 0) {
+          <div class="product-grid transition-opacity" [class.opacity-60]="loading">
+            @for (product of products.data; track product.id) {
+              <app-product-item [product]="product"></app-product-item>
+            }
+          </div>
+
+          <div class="mt-10 flex flex-col items-center justify-between gap-3 border-t border-line pt-6 sm:flex-row">
+            <p class="text-sm muted">Page {{ shopParams.pageNumber }} of {{ pageCount }}</p>
+            <mat-paginator
+              class="shop-paginator"
+              (page)="handlePageEvent($event)"
+              [length]="products.count"
+              [pageSize]="shopParams.pageSize"
+              [pageSizeOptions]="pageSizeOptions"
+              [pageIndex]="shopParams.pageNumber - 1"
+              [showFirstLastButtons]="true"
+              aria-label="Select page">
+            </mat-paginator>
+          </div>
+        } @else if (products) {
+          <div class="flex flex-col items-center rounded-2xl bg-snow px-6 py-16 text-center">
+            <span class="grid h-14 w-14 place-items-center rounded-2xl bg-white text-navy shadow-[0_0_0_1px_theme(colors.line.DEFAULT)]">
+              <mat-icon>filter_alt_off</mat-icon>
+            </span>
+            <p class="mt-5 text-lg font-semibold text-navy">No products match these filters</p>
+            <p class="mt-1 max-w-sm text-sm muted">Try another search or remove a few filters to see more gear.</p>
+            <button mat-flat-button type="button" class="mt-6" (click)="resetFilters()">Reset filters</button>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<mat-menu #sortMenu="matMenu" xPosition="before">
+  @for (sort of sortOptions; track sort.value) {
+    <button mat-menu-item type="button" (click)="onSortChange(sort.value)">
+      <mat-icon [class.invisible]="shopParams.sort !== sort.value">check</mat-icon>
+      {{ sort.name }}
+    </button>
+  }
+</mat-menu>

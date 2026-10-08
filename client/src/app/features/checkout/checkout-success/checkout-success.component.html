@@ -1,56 +1,47 @@
-<section class="bg-white py-16" *ngIf="signalRService.orderSignal() as order">
-    <div class="mx-auto max-w-2xl px-4">
-        <h2 class="font-semibold text-2xl mb-2">Thanks for your fake order!</h2>
-        <p class="text-gray-500 mb-8">Your order <span class="font-medium">
-            #{{order.id}}
-        </span>
-         will never be processed as this is a fake shop.  we will not notify you once your order has not shipped.
-        </p>
-        <div class="space-y-2 rounded-lg border border-gray-100 bg-gray-50 p-6 mb-8">
-            <dl class="flex items-center justify-between gap-4">
-                <dt class="font-normal text-gray-500">Date</dt>
-                <dd class="font-medium text-gray-900 text-end">{{order.orderDate | date: 'medium'}}</dd>
-            </dl>
-            <dl class="flex items-center justify-between gap-4">
-                <dt class="font-normal text-gray-500">Payment method</dt>
-                <dd class="font-medium text-gray-900 text-end">
-                    {{order.paymentSummary| paymentCard}}
-                </dd>
-            </dl>
-            <dl class="flex items-center justify-between gap-4">
-                <dt class="font-normal text-gray-500">Address</dt>
-                <dd class="font-medium text-gray-900 text-end">
-                    {{order.shippingAddress | address}}
-                </dd>
-            </dl>
-            <dl class="flex items-center justify-between gap-4">
-                <dt class="font-normal text-gray-500">Amount</dt>
-                <dd class="font-medium text-gray-900 text-end">
-                    {{order.total | currency}}
-                </dd>
-            </dl>
-        </div>
-        <div class="flex items-center space-x-4">
-            <button routerLink="/orders/{{order.id}}" mat-flat-button>View your order</button>
-            <button routerLink="/shop" mat-stroked-button>Continue shopping</button>
-        </div>
-    </div>
-</section>
+<div class="container py-12 sm:py-16">
+  <div class="mx-auto max-w-xl text-center">
+    @if (signalRService.orderSignal(); as order) {
+      <div class="mx-auto grid h-16 w-16 place-items-center rounded-full bg-ice-100 text-success">
+        <mat-icon class="!h-9 !w-9 !text-[36px]">check_circle</mat-icon>
+      </div>
+      <h1 class="h1 mt-6">Thanks for your order</h1>
+      <p class="muted mt-3">
+        Order <span class="font-semibold text-navy">#{{ order.id }}</span> is confirmed.
+        This is a demo shop, so nothing will actually ship.
+      </p>
 
-<section class="bg-white py-16" *ngIf="!signalRService.orderSignal()">
-    <div class="mx-auto max-w-2xl px-4">
-        <h2 class="font-semibold text-2xl mb-2">Order processing... Please wait !!</h2>
-
-        <div class="space-y-2 rounded-lg border border-gray-100 bg-gray-50 p-6 mb-8">
-            <div class="flex flex-col justify-center items-center">
-                <mat-spinner diameter="30"></mat-spinner>
-                <p class="text-xl">Loading order ...</p>
-                <span>Your payement has been received. We are creating the order</span>
-            </div>
+      <dl class="soft-box mt-8 space-y-3 p-5 text-left text-sm sm:p-6">
+        <div class="flex justify-between gap-6">
+          <dt class="shrink-0 text-ink-muted">Date</dt>
+          <dd class="text-right font-medium text-ink">{{ order.orderDate | date: 'medium' }}</dd>
         </div>
-        <div class="flex items-center space-x-4">
-            <button routerLink="/shop" mat-stroked-button>Continue shopping</button>
+        <div class="flex justify-between gap-6">
+          <dt class="shrink-0 text-ink-muted">Payment</dt>
+          <dd class="text-right font-medium text-ink">{{ order.paymentSummary | paymentCard }}</dd>
         </div>
-    </div>
-</section>
+        <div class="flex justify-between gap-6">
+          <dt class="shrink-0 text-ink-muted">Address</dt>
+          <dd class="text-right font-medium text-ink">{{ order.shippingAddress | address }}</dd>
+        </div>
+        <div class="divider flex justify-between gap-6 pt-3">
+          <dt class="shrink-0 font-semibold text-ink">Total</dt>
+          <dd class="price text-base">{{ order.total | currency }}</dd>
+        </div>
+      </dl>
 
+      <div class="mt-8 flex flex-col justify-center gap-2 sm:flex-row sm:gap-3">
+        <button [routerLink]="['/orders', order.id]" mat-flat-button>View your order</button>
+        <button routerLink="/shop" mat-stroked-button>Continue shopping</button>
+      </div>
+    } @else {
+      <div class="mx-auto grid h-16 w-16 place-items-center rounded-full bg-ice-50">
+        <mat-spinner diameter="32"></mat-spinner>
+      </div>
+      <h1 class="h1 mt-6">Processing your order</h1>
+      <p class="muted mt-3">Your payment was received. We are creating your order, this only takes a moment.</p>
+      <div class="mt-8 flex justify-center">
+        <button routerLink="/shop" mat-stroked-button>Continue shopping</button>
+      </div>
+    }
+  </div>
+</div>

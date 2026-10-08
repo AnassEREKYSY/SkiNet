@@ -1,0 +1,55 @@
+// The custom step header in the template replaces Material's header.
+:host ::ng-deep .checkout-stepper {
+  background: transparent;
+
+  .mat-horizontal-stepper-header-container {
+    display: none;
+  }
+
+  .mat-horizontal-content-container {
+    padding: 0;
+  }
+}
+
+.step-head {
+  @apply flex items-center gap-2 rounded-lg text-sm font-medium text-ink-muted transition-colors;
+
+  &:not(:disabled):not(.is-active) {
+    @apply hover:text-navy;
+  }
+
+  &:disabled {
+    @apply cursor-default;
+  }
+
+  &.is-active,
+  &.is-done {
+    @apply text-navy;
+  }
+
+  &.is-active .step-label {
+    @apply font-semibold;
+  }
+}
+
+.step-dot {
+  @apply grid h-8 w-8 shrink-0 place-items-center rounded-full border border-line-strong bg-white text-sm font-semibold tabular-nums;
+
+  .is-active & {
+    @apply border-navy bg-navy text-white;
+  }
+
+  .is-done & {
+    @apply border-ice-200 bg-ice-100 text-navy;
+  }
+
+  mat-icon {
+    @apply text-[18px] leading-none;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.stripe-box {
+  @apply min-h-[120px] rounded-xl border border-line bg-white p-4;
+}

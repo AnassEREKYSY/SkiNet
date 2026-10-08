@@ -1,23 +1,39 @@
+<div class="container flex justify-center py-12 sm:py-16">
+  <div class="w-full max-w-[420px]">
+    <div class="card p-6 sm:p-8">
+      <div class="text-center">
+        <img src="/images/logo-mark.svg" alt="" class="mx-auto h-11 w-11" />
+        <h1 class="mt-5 text-2xl font-bold tracking-tight text-navy">Create your account</h1>
+        <p class="mt-1.5 text-sm muted">Save your details and follow every order in one place.</p>
+      </div>
 
-<mat-card class="max-w-lg mx-auto mt-32 p-8 bg-white">
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-        <div class="text-center mb-6">
-            <h1 class="text-3xl font-semibold text-primary">Regsiter</h1>
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="mt-7">
+        <div class="grid gap-x-3 sm:grid-cols-2">
+          <app-text-input label="First name" formControlName="firstName" autocomplete="given-name" />
+          <app-text-input label="Last name" formControlName="lastName" autocomplete="family-name" />
         </div>
-        <app-text-input label="First Name" formControlName="firstName" />
-        <app-text-input label="Last Name" formControlName="lastName" />
-        <app-text-input label="Email address" formControlName="email" type="email" />
-        <app-text-input label="Password" formControlName="password" type="password" />
-        @if(validationErrors){
-            <div class="mb-3 p-4 bg-red-100 text-red-600">
-                <ul class="list-disc px-3">
-                    @for (error of validationErrors; track $index) {
-                        <li>{{error}}</li>
-                    }
-                </ul> 
-            </div>
-        }
-        <button mat-flat-button type="submit" class="w-full py-2" [disabled]="registerForm.invalid">Register</button>
-    </form>
+        <app-text-input label="Email address" formControlName="email" type="email"
+                        placeholder="name@example.com" autocomplete="email" />
+        <app-text-input label="Password" formControlName="password" type="password"
+                        placeholder="Choose a password" autocomplete="new-password" />
 
-</mat-card>
+        @if (validationErrors) {
+          <div class="mb-4 rounded-xl bg-danger/10 p-4 text-sm text-danger" role="alert">
+            <ul class="list-disc space-y-1 pl-4">
+              @for (error of validationErrors; track $index) {
+                <li>{{ error }}</li>
+              }
+            </ul>
+          </div>
+        }
+
+        <button mat-flat-button type="submit" class="mt-2 w-full" [disabled]="registerForm.invalid">Create account</button>
+      </form>
+    </div>
+
+    <p class="mt-6 text-center text-sm muted">
+      Already have an account?
+      <a routerLink="/account/login" class="link">Sign in</a>
+    </p>
+  </div>
+</div>

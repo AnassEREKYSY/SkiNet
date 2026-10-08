@@ -1,15 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ShopService } from '../../../core/services/shop.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Product } from '../../../shared/models/product';
 import { CurrencyPipe } from '@angular/common';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { MatDivider } from '@angular/material/divider';
 import { CartService } from '../../../core/services/cart.service';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-product-details',
@@ -18,11 +14,7 @@ import { FormsModule } from '@angular/forms';
     CurrencyPipe,
     MatButton,
     MatIcon,
-    MatFormField,
-    MatInput,
-    MatLabel,
-    MatDivider,
-    FormsModule
+    RouterLink
   ],
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.scss'
@@ -58,7 +50,21 @@ export class ProductDetailsComponent implements OnInit{
     this.quantity = this.quantityInCart || 1;
   } 
 
+  /** Going down to 0 is allowed only to remove an item already in the cart. */
+  get minQuantity() {
+    return this.quantityInCart > 0 ? 0 : 1;
+  }
+
+  increment() {
+    this.quantity++;
+  }
+
+  decrement() {
+    if (this.quantity > this.minQuantity) this.quantity--;
+  }
+
   getButtonText(){
+    if (this.quantityInCart > 0 && this.quantity === 0) return 'Remove from cart';
     return this.quantityInCart > 0 ? 'Update cart' : 'Add to cart'
   } 
 
