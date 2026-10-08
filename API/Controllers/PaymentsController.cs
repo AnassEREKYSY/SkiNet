@@ -101,8 +101,10 @@ public class PaymentsController(IPaymentService paymentService,
     {
         try
         {
-            return EventUtility.ConstructEvent(json, Request.Headers["Stripe-Signature"], 
-                _whSecret);
+            // The webhook endpoint created in the Stripe dashboard uses the latest API version,
+            // which is newer than the one pinned by Stripe.net: still accept those events.
+            return EventUtility.ConstructEvent(json, Request.Headers["Stripe-Signature"],
+                _whSecret, throwOnApiVersionMismatch: false);
         }
         catch (Exception ex)
         {
