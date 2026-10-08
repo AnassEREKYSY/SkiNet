@@ -48,13 +48,14 @@ for c in skinet-api skinet-client; do
 done
 
 # 4. Pull and (re)start
-green "Pulling images (tag: $(grep '^IMAGE_TAG=' .env | cut -d= -f2))"
+env_get() { grep "^$1=" .env | tail -n1 | cut -d= -f2- || true; }
+green "Pulling images (tag: $(env_get IMAGE_TAG))"
 $COMPOSE pull
 green "Starting the stack"
 $COMPOSE up -d --remove-orphans
 
 # 5. Wait for the API (it migrates and seeds the database on first start)
-port="$(grep '^CLIENT_PORT=' .env | cut -d= -f2)"; port="${port:-4200}"
+port="$(env_get CLIENT_PORT)"; port="${port:-4200}"
 yellow "Waiting for http://127.0.0.1:${port}/api/health ..."
 for i in $(seq 1 40); do
   if curl -fsS "http://127.0.0.1:${port}/api/health" >/dev/null 2>&1; then
