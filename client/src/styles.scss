@@ -1,47 +1,184 @@
+@use 'sass:map';
 @use '@angular/material' as mat;
+
+@import '@fontsource-variable/manrope';
+@import 'material-icons/iconfont/outlined.css';
+@import 'material-icons/iconfont/filled.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-$customTheme: mat.define-theme();
+/*
+  Skinet design system: white, navy and ice blue.
+  Material components are themed with a custom navy palette (M3 "primary" tone 40 = navy),
+  Tailwind uses the same values through the colors defined in tailwind.config.js.
+*/
+
+$navy-palette: (
+  0: #000000,
+  10: #04172b,
+  20: #0b2540,
+  25: #102e4d,
+  30: #15375a,
+  35: #1b4167,
+  40: #0f2e4f,
+  50: #3b6a96,
+  60: #5687b4,
+  70: #73a3cf,
+  80: #9cc4e6,
+  90: #dcebf7,
+  95: #edf5fb,
+  98: #f7fbfe,
+  99: #fbfdff,
+  100: #ffffff,
+  secondary: (
+    0: #000000, 10: #0e1d2b, 20: #233241, 25: #2e3d4d, 30: #394858, 35: #455464, 40: #516070,
+    50: #697989, 60: #8393a4, 70: #9dadbf, 80: #b9c8da, 90: #d5e4f7, 95: #e9f1fb, 98: #f7f9ff, 99: #fcfcff, 100: #ffffff,
+  ),
+  neutral: (
+    0: #000000, 4: #0b0e11, 6: #101418, 10: #191c20, 12: #1d2024, 17: #272a2e, 20: #2e3135, 22: #33363a,
+    24: #37393e, 25: #393c40, 30: #44474b, 35: #505357, 40: #5c5f63, 50: #75777c, 60: #8f9196, 70: #a9abb0,
+    80: #c5c6cb, 87: #d9dade, 90: #e1e2e7, 92: #e7e8ec, 94: #edeef2, 95: #eff1f5, 96: #f2f4f8, 98: #f8f9fc,
+    99: #fcfcff, 100: #ffffff,
+  ),
+  neutral-variant: (
+    0: #000000, 10: #161c22, 20: #2b3138, 25: #363c43, 30: #41474e, 35: #4d535a, 40: #595f66,
+    50: #72787f, 60: #8b9199, 70: #a6acb4, 80: #c1c7cf, 90: #dde3eb, 95: #ecf1f9, 98: #f7f9ff, 99: #fcfcff, 100: #ffffff,
+  ),
+  error: (
+    0: #000000, 10: #410002, 20: #690005, 25: #7e0007, 30: #93000a, 35: #a80710, 40: #ba1a1a,
+    50: #de3730, 60: #ff5449, 70: #ff897d, 80: #ffb4ab, 90: #ffdad6, 95: #ffedea, 98: #fff8f7, 99: #fffbff, 100: #ffffff,
+  ),
+);
+
+$theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: $navy-palette,
+    tertiary: mat.$cyan-palette,
+  ),
+  typography: (
+    brand-family: 'Manrope Variable',
+    plain-family: 'Manrope Variable',
+  ),
+  density: (
+    scale: 0,
+  ),
+));
 
 @include mat.core();
 
 .custom-theme {
-    @include mat.all-component-themes($customTheme);
+  @include mat.all-component-themes($theme);
 
-    // override the button styles
-    .mdc-button, .mdc-raised-button, .mdc-stroked-button, .mdc-flat-button {
-        @apply rounded-md
-    }
+  // Calm, rectangular controls instead of pills.
+  --mdc-filled-button-container-shape: 10px;
+  --mdc-outlined-button-container-shape: 10px;
+  --mdc-protected-button-container-shape: 10px;
+  --mdc-text-button-container-shape: 10px;
+  --mdc-filled-button-container-height: 44px;
+  --mdc-outlined-button-container-height: 44px;
+  --mdc-outlined-button-outline-color: theme('colors.line.DEFAULT');
+  --mdc-outlined-text-field-container-shape: 10px;
+  --mdc-outlined-text-field-outline-color: theme('colors.line.strong');
+  --mdc-dialog-container-shape: 16px;
+  --mat-menu-container-shape: 12px;
+  --mat-select-container-elevation-shadow: 0 12px 32px rgb(11 37 64 / 0.12);
+  --mat-menu-container-elevation-shadow: 0 12px 32px rgb(11 37 64 / 0.12);
+  --mdc-snackbar-container-shape: 12px;
+  --mat-stepper-header-selected-state-icon-background-color: theme('colors.navy.DEFAULT');
+  --mat-paginator-container-background-color: transparent;
+  --mdc-elevated-card-container-elevation: none;
+  --mdc-outlined-card-outline-color: theme('colors.line.DEFAULT');
+  --mdc-outlined-card-container-shape: 16px;
+  --mat-badge-background-color: theme('colors.ice.500');
+  --mat-badge-text-color: theme('colors.navy.DEFAULT');
 }
 
-.container {
-    @apply mx-auto max-w-screen-2xl
+html,
+body {
+  background: #ffffff;
+  color: theme('colors.ink.DEFAULT');
+  font-family: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
+::selection {
+  background: theme('colors.ice.200');
+}
+
+.mat-icon {
+  font-family: 'Material Icons Outlined';
+}
+
+@layer components {
+  .container {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.14em] text-ice-700;
+  }
+
+  .h1 {
+    @apply text-3xl font-bold tracking-tight text-navy sm:text-4xl;
+  }
+
+  .h2 {
+    @apply text-2xl font-bold tracking-tight text-navy;
+  }
+
+  .muted {
+    @apply text-ink-muted;
+  }
+
+  .card {
+    @apply rounded-2xl border border-line bg-white;
+  }
+
+  .soft-box {
+    @apply rounded-xl bg-snow;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full bg-ice-50 px-2.5 py-0.5 text-xs font-medium text-navy;
+  }
+
+  .link {
+    @apply font-medium text-navy underline-offset-4 hover:underline;
+  }
+
+  .price {
+    @apply font-semibold tabular-nums text-navy;
+  }
+
+  .divider {
+    @apply border-t border-line;
+  }
+}
+
+// Keep the old helper used in a few templates, now navy.
 .text-primary {
-    color: #7d00fa;
+  color: theme('colors.navy.DEFAULT');
 }
 
 button.match-input-height {
-    height: var(--mat-form-field-container-height) !important;
+  height: var(--mat-form-field-container-height) !important;
 }
 
 .mdc-notched-outline__notch {
-    border-right-style: none !important;
+  border-right-style: none !important;
 }
 
-
-.mat-mdc-snack-bar-container.snack-error{
-    --mdc-snackbar-container-color:red;
-    --mdc-snack-bar-button-color:#fff;
-    --mdc-snackbar-supporting-text-color:#fff;
+.mat-mdc-snack-bar-container.snack-error {
+  --mdc-snackbar-container-color: #b42318;
+  --mat-snack-bar-button-color: #fff;
+  --mdc-snackbar-supporting-text-color: #fff;
 }
 
-.mat-mdc-snack-bar-container.snack-success{
-    --mdc-snackbar-container-color:green;
-    --mdc-snack-bar-button-color:#fff;
-    --mdc-snackbar-supporting-text-color:#fff;
+.mat-mdc-snack-bar-container.snack-success {
+  --mdc-snackbar-container-color: theme('colors.navy.DEFAULT');
+  --mat-snack-bar-button-color: theme('colors.ice.200');
+  --mdc-snackbar-supporting-text-color: #fff;
 }

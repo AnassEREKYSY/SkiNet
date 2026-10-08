@@ -1,17 +1,35 @@
-<div class="mt-5 flex justify-center gap-4">
-    <button mat-stroked-button (click)="get500Error()"> Test 500 error</button>
-    <button mat-stroked-button (click)="get404Error()"> Test 404 error</button>
-    <button mat-stroked-button (click)="get400Error()"> Test 400 error</button>
-    <button mat-stroked-button (click)="get401Error()"> Test 401 error</button>
-    <button mat-stroked-button (click)="get400ValidationError()"> Test validation error</button>
-</div>
+<div class="container py-10">
+  <p class="eyebrow">Developer tools</p>
+  <h1 class="h1 mt-2">Error handling</h1>
+  <p class="mt-2 muted">A demo of how the app handles API errors. Each button calls an endpoint that fails on purpose.</p>
 
-@if(validationErrors){
-    <div class="mx-auto max-w-lg mt-5 bg-red-100">
-        <ul class="space-y-2 p-2">
-            @for (error of validationErrors; track $index) {
-                <li class="text-red-800">{{error}}</li>
-            }
-        </ul>
+  <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    @for (t of tests; track t.title) {
+      <button type="button" (click)="t.run()"
+              class="card group flex items-start gap-4 p-5 text-left transition-shadow hover:shadow-[0_12px_32px_rgb(11_37_64_/_0.10)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ice-200">
+        <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-ice-100 text-navy">
+          <mat-icon>{{ t.icon }}</mat-icon>
+        </span>
+        <span class="min-w-0 flex-1">
+          <span class="flex items-center gap-2">
+            <span class="font-semibold text-navy">{{ t.title }}</span>
+            <span class="chip">{{ t.code }}</span>
+          </span>
+          <span class="mt-1 block text-sm muted">{{ t.text }}</span>
+        </span>
+        <mat-icon class="self-center text-ink-muted transition-transform group-hover:translate-x-0.5">arrow_forward</mat-icon>
+      </button>
+    }
+  </div>
+
+  @if (validationErrors) {
+    <div class="mt-8 max-w-xl rounded-xl bg-danger/10 p-5" role="alert">
+      <p class="text-sm font-semibold text-danger">Validation errors</p>
+      <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-danger">
+        @for (error of validationErrors; track $index) {
+          <li>{{ error }}</li>
+        }
+      </ul>
     </div>
-}
+  }
+</div>

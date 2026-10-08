@@ -1,24 +1,27 @@
-<section>
-    @if (cartService.cart()?.items?.length! > 0) {
-
-    <div class="flex w-full items-start gap-6 mt-32">
-        <div class="w-3/4">
-            @for (item of cartService.cart()?.items; track item.productId) {
-            <app-cart-item [item]="item"></app-cart-item>
-            }
-        </div>
-        <div class="w-1/4">
-            <app-order-summary></app-order-summary>
-        </div>
+<div class="container py-10">
+  @if (cartService.cart()?.items?.length) {
+    <div class="mb-8">
+      <h1 class="h1">Your cart</h1>
+      <p class="muted mt-2">{{ cartService.itemCount() }} {{ cartService.itemCount() === 1 ? 'item' : 'items' }} ready for checkout.</p>
     </div>
 
-    } @else {
-    <app-empty-state 
-        message="Your shopping cart is empty"
-        icon="remove_shopping_cart"
-        actionText="Go to shop"
-        (action)="onAction()"
-    />
-    }
+    <div class="grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
+      <section class="card divide-y divide-line px-4 sm:px-6" aria-label="Cart items">
+        @for (item of cartService.cart()?.items; track item.productId) {
+          <app-cart-item [item]="item"></app-cart-item>
+        }
+      </section>
 
-</section>
+      <aside class="lg:sticky lg:top-24">
+        <app-order-summary></app-order-summary>
+      </aside>
+    </div>
+  } @else {
+    <app-empty-state
+      message="Your cart is empty"
+      icon="shopping_cart"
+      actionText="Start shopping"
+      (action)="onAction()"
+    />
+  }
+</div>

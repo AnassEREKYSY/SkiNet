@@ -1,22 +1,28 @@
-<div class="w-full">
-    <mat-radio-group 
-        class="grid grid-cols-2 gap-4"
-        [value]="cartService.selectedDelivery()?.id"
-        (change)="updateDeliveryMethod($event.value)"
-        >
-        @for (method of checkoutService.deliverMethods; track method.id) {
-            <label class="p-3 border border-gray-200 cursor-pointer w-full h-full hover:bg-purple-100">
-                <mat-radio-button 
-                    class="w-full h-full" 
-                    [value]="method"
-                    [checked]="cartService.selectedDelivery() === method"
-                    >
-                    <div class="flex flex-col w-full h-full">
-                        <strong>{{method.shortName}} - {{method.price | currency}}</strong>
-                        <span class="text-sm">{{method.description}}</span>
-                    </div>
-                </mat-radio-button>
-            </label>
+<mat-radio-group
+  class="grid gap-3 sm:grid-cols-2"
+  aria-label="Delivery method"
+  [value]="cartService.selectedDelivery()?.id"
+  (change)="updateDeliveryMethod($event.value)"
+>
+  @for (method of checkoutService.deliverMethods; track method.id) {
+    <label class="delivery-option" [class.is-selected]="cartService.selectedDelivery()?.id === method.id">
+      <mat-radio-button
+        class="-ml-2 -mt-2 shrink-0"
+        [value]="method"
+        [checked]="cartService.selectedDelivery()?.id === method.id"
+      ></mat-radio-button>
+      <span class="flex min-w-0 flex-1 flex-col">
+        <span class="flex items-start justify-between gap-3">
+          <span class="font-semibold text-ink">{{ method.shortName }}</span>
+          <span class="price">
+            @if (method.price === 0) { Free } @else { {{ method.price | currency }} }
+          </span>
+        </span>
+        <span class="mt-0.5 text-sm text-ink-muted">{{ method.deliveryTime }}</span>
+        @if (method.description) {
+          <span class="mt-1 text-xs text-ink-muted">{{ method.description }}</span>
         }
-    </mat-radio-group>
-</div>
+      </span>
+    </label>
+  }
+</mat-radio-group>

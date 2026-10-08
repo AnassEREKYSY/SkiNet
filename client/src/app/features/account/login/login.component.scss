@@ -1,0 +1,11 @@
+.demo-btn {
+  @apply flex min-w-0 flex-col items-start rounded-[10px] border border-line bg-white px-3 py-2 text-left text-sm transition-colors;
+
+  &:hover {
+    @apply border-ice-500 bg-ice-50;
+  }
+
+  &:focus-visible {
+    @apply outline-none ring-2 ring-ice-200;
+  }
+}

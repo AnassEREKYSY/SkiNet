@@ -1,6 +1,8 @@
-# Skinet Project Repository
+# Skinet
 
-- an ecommerce web application created in .net 8 and Angular 18 and using Sql for the database.
+An online snow sports gear shop: .NET 8 API (Clean Architecture, EF Core, SQL Server, Redis, ASP.NET Identity, SignalR, Stripe) and an Angular 18 client (Angular Material + Tailwind).
+
+Deployment to the OVH VM (GitHub Actions, GHCR, Docker Compose, Nginx + HTTPS): see [DEPLOYMENT.md](DEPLOYMENT.md). Client design rules: [client/DESIGN.md](client/DESIGN.md).
 
 # Running the project
 

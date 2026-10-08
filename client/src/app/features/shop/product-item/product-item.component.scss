@@ -1,8 +1,3 @@
-.product-card {
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-.product-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    cursor: pointer;
+.add-btn {
+  @apply grid h-10 w-10 place-items-center rounded-xl bg-navy text-white transition-colors hover:bg-navy-700;
 }

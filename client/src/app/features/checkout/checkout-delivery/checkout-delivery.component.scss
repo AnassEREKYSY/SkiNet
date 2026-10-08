@@ -1,0 +1,18 @@
+.delivery-option {
+  @apply flex cursor-pointer items-start gap-2 rounded-xl border border-line bg-white p-4 transition-colors hover:border-line-strong hover:bg-snow;
+
+  &.is-selected {
+    @apply border-navy bg-ice-50;
+    box-shadow: inset 0 0 0 1px theme('colors.navy.DEFAULT');
+  }
+}
+
+:host ::ng-deep .mat-mdc-radio-button {
+  --mdc-radio-selected-icon-color: theme('colors.navy.DEFAULT');
+  --mdc-radio-selected-focus-icon-color: theme('colors.navy.DEFAULT');
+  --mdc-radio-selected-hover-icon-color: theme('colors.navy.DEFAULT');
+  --mdc-radio-selected-pressed-icon-color: theme('colors.navy.DEFAULT');
+  --mat-radio-checked-ripple-color: theme('colors.navy.DEFAULT');
+  --mdc-radio-unselected-icon-color: theme('colors.line.strong');
+  --mdc-radio-unselected-hover-icon-color: theme('colors.ink.muted');
+}

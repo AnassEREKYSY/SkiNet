@@ -1,17 +1,17 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
-import { MatButton } from '@angular/material/button';
+import { Component, inject, OnInit } from '@angular/core';
+import { MatIconAnchor, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatLabel, MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterLink } from '@angular/router';
-import {MatTabsModule} from '@angular/material/tabs';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table'
 import { AdminService } from '../../../core/services/admin.service';
 import { OrderParams } from '../../../shared/models/orderParams';
 import { Order } from '../../../shared/models/order';
 import { DialogService } from '../../../core/services/dialog.service';
+import { orderBadgeBase, orderStatusClass, orderStatusLabel } from '../../orders/order-status';
 
 @Component({
   selector: 'app-admin',
@@ -19,14 +19,14 @@ import { DialogService } from '../../../core/services/dialog.service';
   imports: [
     MatTableModule,
     MatPaginatorModule,
-    MatButton,
+    MatIconButton,
+    MatIconAnchor,
     MatIcon,
     MatSelectModule,
     DatePipe,
     CurrencyPipe,
     MatLabel,
     MatTooltipModule,
-    MatTabsModule,
     RouterLink
   ],
   templateUrl: './admin.component.html',
@@ -40,6 +40,8 @@ export class AdminComponent implements OnInit {
   orderParams = new OrderParams();
   totalItems = 0;
   statusOptions = ['All', 'PaymentReceived', 'PaymentMismatch', 'Refunded', 'Pending'];
+  readonly statusLabel = orderStatusLabel;
+  readonly statusClass = (s: string) => `${orderBadgeBase} ${orderStatusClass(s)}`;
 
   ngOnInit(): void {
     this.loadOrders();

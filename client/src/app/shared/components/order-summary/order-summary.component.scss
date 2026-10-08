@@ -1,0 +1,17 @@
+.voucher-input {
+  @apply h-11 min-w-0 flex-1 rounded-[10px] border border-line-strong bg-white px-3 text-sm text-ink outline-none transition-colors placeholder:text-ink-muted;
+
+  &:focus {
+    @apply border-navy ring-2 ring-ice-200;
+  }
+}
+
+.remove-btn {
+  @apply grid h-8 w-8 place-items-center rounded-lg text-ink-muted transition-colors hover:bg-snow hover:text-danger;
+
+  mat-icon {
+    @apply text-[18px] leading-none;
+    width: 18px;
+    height: 18px;
+  }
+}

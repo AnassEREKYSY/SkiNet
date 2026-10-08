@@ -2,19 +2,20 @@ import { Component, inject, OnInit } from '@angular/core';
 import { OrderService } from '../../../core/services/order.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Order } from '../../../shared/models/order';
-import { MatCardModule } from '@angular/material/card';
+import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
 import { AddressPipe } from '../../../shared/pipes/address.pipe';
 import { PaymentCardPipe } from '../../../shared/pipes/payment-card.pipe';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { AccountService } from '../../../core/services/account.service';
 import { AdminService } from '../../../core/services/admin.service';
+import { orderBadgeBase, orderStatusClass, orderStatusLabel } from '../order-status';
 
 @Component({
   selector: 'app-order-detailed',
   standalone: true,
   imports: [
-    MatCardModule,
+    MatIcon,
     MatButton,
     AddressPipe,
     PaymentCardPipe,
@@ -32,7 +33,9 @@ export class OrderDetailedComponent implements OnInit{
   order?: Order
   private router= inject(Router);
   private adminService= inject(AdminService);
-  buttonText= this.accountService.isAdmin() ? 'Return to admin' : 'Return to orders'
+  buttonText= this.accountService.isAdmin() ? 'Back to admin' : 'Back to orders'
+  readonly statusLabel = orderStatusLabel;
+  readonly statusClass = (s: string) => `${orderBadgeBase} ${orderStatusClass(s)}`;
 
   ngOnInit(): void {
     this.loadOrder();

@@ -1,95 +1,100 @@
 @if (order) {
-    <mat-card class="bg-white py-8 shadow-md max-w-screen-lg mx-auto">
-        <div class="px-4 w-full">
-            <div class="flex justify-between items-center align-middle">
-                <h2 class="text-2xl text-center font-semibold">Order summary for order #{{order.id}}</h2>
-                <button (click)="onReturnClick()" mat-stroked-button>{{buttonText}}</button>
-            </div>
-            <div class="mt-8 py-3 border-t border-gray-200 flex gap-16">
-                <div class="space-y-2">
-                    <h4 class="text-lg font-semibold">Billing and delivery information</h4>
-                    <dl>
-                        <dt class="font-medium">Shipping address</dt>
-                        <dd class="mt-1 font-light">{{order.shippingAddress | address}}</dd>
-                    </dl>
-                    <dl>
-                        <dt class="font-medium">Payment info</dt>
-                        <dd class="mt-1 font-light">{{order.paymentSummary | paymentCard}}</dd>
-                    </dl>
-                </div>
-                <div class="space-y-2">
-                    <h4 class="text-lg font-semibold">Order details</h4>
-                    <dl>
-                        <dt class="font-medium">Email address</dt>
-                        <dd class="mt-1 font-light">{{order.buyerEmail}}</dd>
-                    </dl>
-                    <dl>
-                        <dt class="font-medium">Order status</dt>
-                        <dd class="mt-1 font-light">{{order.status}}</dd>
-                    </dl>
-                    <dl>
-                        <dt class="font-medium">Order date</dt>
-                        <dd class="mt-1 font-light">{{order.orderDate | date: 'medium'}}</dd>
-                    </dl>
-                </div>
-            </div>
+  <div class="container py-10">
+    <button type="button" (click)="onReturnClick()"
+            class="-ml-1 inline-flex items-center gap-1 rounded-lg px-1 py-1 text-sm font-medium text-ink-muted transition-colors hover:text-navy">
+      <mat-icon class="!h-[18px] !w-[18px] !text-[18px]">arrow_back</mat-icon>
+      {{ buttonText }}
+    </button>
 
-            <div class="mt-4">
-                <div class="border-y border-gray-200">
-                    <table class="w-full text-center">
-                        <tbody class="divide-y divide-gray-200">
-                            @for (item of order.orderItems; track item.productId) {
-                                <tr>
-                                    <td class="py-4">
-                                        <div class="flex items-center gap-4">
-                                            <img src="{{item.pictureUrl}}" alt="product image" 
-                                                class="w-10 h-10">
-                                            <span>{{item.productName}}</span>
-                                        </div>
-                                    </td>
-                                    <td class="p-4">x{{item.quantity}}</td>
-                                    <td class="p-4 text-right">{{item.price | currency}}</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="space-y-4 rounded-lg border-y border-gray-200 p-4 bg-white">
-                <p class="text-xl font-semibold">Order summary</p>
-                <div class="space-y-4">
-                    <div class="space-y-2">
-                        <dl class="flex items-center justify-between gap-4">
-                            <dt class="font-medium text-gray-500">Subtotal</dt>
-                            <dd class="font-medium text-gray-900">
-                                {{order.subtotal | currency}}
-                            </dd>
-                        </dl>
-                        <dl class="flex items-center justify-between gap-4">
-                            <dt class="font-medium text-gray-500">Discount</dt>
-                            <dd class="font-medium text-green-500">
-                                -{{order.discount | currency}}
-                            </dd>
-                        </dl>
-                        <dl class="flex items-center justify-between gap-4">
-                            <dt class="font-medium text-gray-500">Delivery fee</dt>
-                            <dd class="font-medium text-gray-900">
-                                {{order.shippingPrice| currency}}
-                            </dd>
-                        </dl>
-                    </div>
-        
-                    <dl class="flex items-center justify-between gap-4 border-t border-gray-200 pt-2">
-                        <dt class="font-medium text-gray-500">Total</dt>
-                        <dd class="font-medium text-gray-900">
-                            {{order.total | currency}}
-                        </dd>
-                    </dl>
-                </div>
-                 
-            </div>
-
+    <div class="mt-4 flex flex-wrap items-start justify-between gap-4">
+      <div>
+        <div class="flex flex-wrap items-center gap-3">
+          <h1 class="h1">Order #{{ order.id }}</h1>
+          <span [class]="statusClass(order.status)">{{ statusLabel(order.status) }}</span>
         </div>
-    </mat-card>
+        <p class="mt-2 muted">Placed on {{ order.orderDate | date: 'medium' }} by {{ order.buyerEmail }}</p>
+      </div>
+    </div>
+
+    <div class="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
+      <!-- Items -->
+      <section class="card p-5 sm:p-6">
+        <h2 class="font-semibold text-navy">
+          Items <span class="font-normal muted">({{ order.orderItems.length }})</span>
+        </h2>
+        <ul class="mt-2 divide-y divide-line">
+          @for (item of order.orderItems; track item.productId) {
+            <li class="flex items-center gap-4 py-4">
+              <a [routerLink]="['/shop', item.productId]" class="block h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-snow sm:h-20 sm:w-20">
+                <img [src]="item.pictureUrl" [alt]="item.productName" class="h-full w-full object-cover" />
+              </a>
+              <div class="min-w-0 flex-1">
+                <a [routerLink]="['/shop', item.productId]" class="line-clamp-2 font-semibold leading-snug text-ink hover:text-navy">{{ item.productName }}</a>
+                <p class="mt-1 text-sm muted">Qty {{ item.quantity }} × {{ item.price | currency }}</p>
+              </div>
+              <span class="price shrink-0">{{ item.price * item.quantity | currency }}</span>
+            </li>
+          }
+        </ul>
+      </section>
+
+      <!-- Summary -->
+      <aside class="card p-5 sm:p-6">
+        <h2 class="font-semibold text-navy">Summary</h2>
+
+        <dl class="mt-4 space-y-4 text-sm">
+          <div class="flex gap-3">
+            <mat-icon class="mt-0.5 shrink-0 !h-5 !w-5 !text-[20px] text-ink-muted">location_on</mat-icon>
+            <div>
+              <dt class="font-medium text-ink">Shipping address</dt>
+              <dd class="mt-0.5 muted">{{ order.shippingAddress | address }}</dd>
+            </div>
+          </div>
+          <div class="flex gap-3">
+            <mat-icon class="mt-0.5 shrink-0 !h-5 !w-5 !text-[20px] text-ink-muted">local_shipping</mat-icon>
+            <div>
+              <dt class="font-medium text-ink">Delivery</dt>
+              <dd class="mt-0.5 muted">{{ order.deliveryMethod || 'Standard delivery' }}</dd>
+            </div>
+          </div>
+          <div class="flex gap-3">
+            <mat-icon class="mt-0.5 shrink-0 !h-5 !w-5 !text-[20px] text-ink-muted">credit_card</mat-icon>
+            <div>
+              <dt class="font-medium text-ink">Payment</dt>
+              @if (order.paymentSummary && order.paymentSummary.last4) {
+                <dd class="mt-0.5 muted">
+                  <span class="capitalize">{{ order.paymentSummary.brand }}</span> ending in {{ order.paymentSummary.last4 }}
+                  <span class="block text-xs">Expires {{ order.paymentSummary.expMonth }}/{{ order.paymentSummary.expYear }}</span>
+                </dd>
+              } @else {
+                <dd class="mt-0.5 muted">{{ order.paymentSummary | paymentCard }}</dd>
+              }
+            </div>
+          </div>
+        </dl>
+
+        <div class="soft-box mt-6 space-y-2.5 p-4 text-sm">
+          <div class="flex justify-between gap-4">
+            <span class="muted">Subtotal</span>
+            <span class="tabular-nums text-ink">{{ order.subtotal | currency }}</span>
+          </div>
+          @if (order.discount) {
+            <div class="flex justify-between gap-4">
+              <span class="muted">Discount</span>
+              <span class="tabular-nums text-success">-{{ order.discount | currency }}</span>
+            </div>
+          }
+          <div class="flex justify-between gap-4">
+            <span class="muted">Delivery fee</span>
+            <span class="tabular-nums text-ink">{{ order.shippingPrice | currency }}</span>
+          </div>
+          <div class="divider !my-3"></div>
+          <div class="flex items-baseline justify-between gap-4">
+            <span class="font-semibold text-navy">Total</span>
+            <span class="price text-lg">{{ order.total | currency }}</span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
 }

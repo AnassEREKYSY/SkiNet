@@ -14,7 +14,8 @@ import { AccountService } from '../../core/services/account.service';
 import { CheckoutDeliveryComponent } from "./checkout-delivery/checkout-delivery.component";
 import { CheckoutReviewComponent } from "./checkout-review/checkout-review.component";
 import { CartService } from '../../core/services/cart.service';
-import { CurrencyPipe, JsonPipe } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { OrderToCreate, ShippingAddress } from '../../shared/models/order';
 import { OrderService } from '../../core/services/order.service';
@@ -31,7 +32,7 @@ import { OrderService } from '../../core/services/order.service';
     CheckoutDeliveryComponent,
     CheckoutReviewComponent,
     CurrencyPipe,
-    JsonPipe,
+    MatIcon,
     MatProgressSpinnerModule
 ],
   templateUrl: './checkout.component.html',
@@ -52,6 +53,19 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   );
   confirmationToken?: ConfirmationToken;
   loading = false;
+  readonly steps = [
+    { label: 'Address' },
+    { label: 'Delivery' },
+    { label: 'Payment' },
+    { label: 'Review' }
+  ];
+
+  /** A step can be opened from the header when every earlier step is complete (same rule as the linear stepper). */
+  canGoTo(index: number) {
+    const status = this.completionStatus();
+    const done = [status.address, status.delivery, status.card];
+    return done.slice(0, index).every(Boolean);
+  }
 
   async ngOnInit() {
     try {
@@ -94,7 +108,6 @@ export class CheckoutComponent implements OnInit, OnDestroy {
         const result = await this.stripeService.createConfirmationToken();
         if (result.error) throw new Error(result.error.message);
         this.confirmationToken = result.confirmationToken;
-        console.log(this.confirmationToken);
       }
     } catch (error: any) {
       this.snackbar.error(error.message);
